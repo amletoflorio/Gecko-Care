@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Certificati ufficiali del Google Fonts Provider (com.google.android.gms),
+  richiesti da androidx.compose.ui:ui-text-google-fonts per scaricare i font
+  a runtime senza doverli impacchettare nell'APK. Sono valori statici
+  pubblicati da Google, invariati da anni.
+  Se in dispositivo/emulatore i font non si caricano (restano sul fallback
+  di sistema), rigenera questo file da Android Studio:
+  res (tasto destro) → New → Font Resource → "Add font to project via XML"
+  seleziona un font Google → lo wizard rigenera i certificati corretti.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string-array name="com_google_android_gms_fonts_certs" translatable="false">
+        <item>@array/com_google_android_gms_fonts_certs_dev</item>
+        <item>@array/com_google_android_gms_fonts_certs_prod</item>
+    </string-array>
+    <string-array name="com_google_android_gms_fonts_certs_dev" translatable="false">
+        <item>
+            MIIEqDCCA5CgAwIBAgIJANWFuGx90071MA0GCSqGSIb3DQEBBAUAMIGUMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEQMA4GA1UEChMHQW5kcm9pZDEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZDEiMCAGCSqGSIb3DQEJARYTYW5kcm9pZEBhbmRyb2lkLmNvbTAeFw0wODA0MTUyMzM2NTZaFw0zNTA5MDEyMzM2NTZaMIGUMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEQMA4GA1UEChMHQW5kcm9pZDEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZDEiMCAGCSqGSIb3DQEJARYTYW5kcm9pZEBhbmRyb2lkLmNvbTCCASAwDQYJKoZIhvcNAQEBBQADggENADCCAQgCggEBANbOLggKv+IxTdGNs8/TGFy0PTP6DHThvbbR24kT9ixcOd9W+EBHDVdEFtcyYz2gJ2ZgQGnbdYq2mUb/7HXBUw4V0nJ5WhZaJdyOZJXjOhLR3nOSyzuJKY0f7+9djxonSDrJU5MTKnUp6VLbAeAaW6dbUgJc3AQZgcHnGYYaSaz3B2mHtjS9J2LULsMMuG82fyM1FYy6qO1krwzUrx+ZqcJXpMj9tHndVzt6iQjkxfxJU8CyN5xVvOKkFUOgW7VbLNwGoVeOWMh2Xn5Fs8bzYh3zeu5Xw5DsTgH04qOJACe9+wIP1yiQjLzq4LlKQmACPGr5wgNQ3ihqrHnj7L8mCU8CAwEAAaOB5jCB4zAdBgNVHQ4EFgQU0zMy1BFN5xxxCK0RS0iOnTUW9d8wgbMGA1UdIwSBqzCBqIAU0zMy1BFN5xxxCK0RS0iOnTUW9d+hgZqkgZcwgZQxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRAwDgYDVQQKEwdBbmRyb2lkMRAwDgYDVQQLEwdBbmRyb2lkMRAwDgYDVQQDEwdBbmRyb2lkMSIwIAYJKoZIhvcNAQkBFhNhbmRyb2lkQGFuZHJvaWQuY29tggkA1YW4bH3TTvUwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQQFAAOCAQEAWCsKM7QDYYP0BkS0P9Zi3IF/vy85V4jvbg+1LOTBjhWQdQOs9bhoZ0mCF3zPtIpBQTgw16TxjR5LmXsWAqAeaKKMBwx0IGgRkOfw==
+        </item>
+    </string-array>
+    <string-array name="com_google_android_gms_fonts_certs_prod" translatable="false">
+        <item>
+            MIIEQzCCAyugAwIBAgIJAMLgh0ZkSjCNMA0GCSqGSIb3DQEBBAUAMHQxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgSW5jLjEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZDAeFw0wODA4MjEyMzEzMzRaFw0zNjAxMDcyMzEzMzRaMHQxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgSW5jLjEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZDCCASAwDQYJKoZIhvcNAQEBBQADggENADCCAQgCggEBAKtWLgDYO6IIrgqWbxJOKdoR8qtW0I9Y4sypEwPpt4pMdrKJekTayeMbYsjnCmAiOnjMB08OB0zVbTaggm88EmuqR38Ye+2R/DdVAlN/JhFVQ2PhLbwEIRfIkE0kv5xXPh8jhWZH8+/xzt9GbEHi6DBWSVLBt0LhbBTUL+2z6+6M1rn6bBRR7NAWvZLmY0FR8ATeTUwrxsuz9M/0mmRJ+Sh2OGpFmMdOgamnjOnSFMv6ItcxlU5MnRlDPBnzsA5j9dTftIRw7YW1Zvle5Z0O6XdSicWmzMzYnjbimZIcTKFlmg2mkO8fFMz8sTb4Wp+jhK9LEeaqLTfKb9PDW6IK8UCAwEAAaOB5jCB4zAdBgNVHQ4EFgQUf6DKTQE+A/e6z1kSSb9WMkC8p9AwgbMGA1UdIwSBqzCBqIAUf6DKTQE+A/e6z1kSSb9WMkC8p9ChgZqkgZcwgZQxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgSW5jLjEQMA4GA1UECxMHQW5kcm9pZDEQMA4GA1UEAxMHQW5kcm9pZIIJAMLgh0ZkSjCNMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEEBQADggEBAIWAAKb0X6rZL7EEr9L2WEeCG1ycOjTFYnGL1DgiIQIvGXblSizJc8i3xvfWJmVnB3XcqEfWWFwaZTuxsPmDkuKVQVAtVSp+swVkm/tybQg=
+        </item>
+    </string-array>
+</resources>

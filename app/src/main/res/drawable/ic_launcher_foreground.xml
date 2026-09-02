@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- corpo -->
+    <path
+        android:fillColor="#5B9C93"
+        android:pathData="M54,66 m-30,0 a30,16.5 0 1,0 60,0 a30,16.5 0 1,0 -60,0" />
+    <!-- coda -->
+    <group
+        android:pivotX="30"
+        android:pivotY="69"
+        android:rotation="-18">
+        <path
+            android:fillColor="#5B9C93"
+            android:pathData="M30,69 m-12,-6 a12,6 0 1,0 24,0 a12,6 0 1,0 -24,0" />
+    </group>
+    <!-- testa -->
+    <path
+        android:fillColor="#5B9C93"
+        android:pathData="M79,45 m-10.5,-9 a10.5,9 0 1,0 21,0 a10.5,9 0 1,0 -21,0" />
+    <!-- occhio -->
+    <path
+        android:fillColor="#0E1316"
+        android:pathData="M83,42 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0" />
+</vector>

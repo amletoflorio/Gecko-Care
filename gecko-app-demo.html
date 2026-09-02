@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terra · demo app gestione geco leopardino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0e1316;
+    --surface:#161c20;
+    --surface-2:#1e262b;
+    --line: rgba(232,236,235,0.08);
+    --teal:#5b9c93;
+    --teal-dim: rgba(91,156,147,0.14);
+    --clay:#af8a63;
+    --clay-dim: rgba(175,138,99,0.16);
+    --sage:#89a082;
+    --sage-dim: rgba(137,160,130,0.16);
+    --slate:#7c93ad;
+    --ink:#eaeeec;
+    --ink-dim: rgba(234,238,236,0.58);
+    --ink-faint: rgba(234,238,236,0.34);
+    --danger:#c1685b;
+  }
+  .phone.light{
+    --night:#f6f3ed;
+    --surface:#ffffff;
+    --surface-2:#eee9e0;
+    --line: rgba(20,25,22,0.09);
+    --ink:#1b211d;
+    --ink-dim: rgba(27,33,29,0.62);
+    --ink-faint: rgba(27,33,29,0.38);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background: radial-gradient(120% 100% at 50% 0%, #161c20 0%, #0a0d0f 72%);
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--ink);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 16px;
+    min-height:100%;
+  }
+  .stage{ display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .stage-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .phone{
+    width:390px;
+    max-width:calc(100vw - 24px);
+    height:844px;
+    max-height:88vh;
+    background:var(--night);
+    border-radius:44px;
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.7), inset 0 0 0 8px #05070a;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  .notch{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:110px; height:22px; background:#05070a; border-radius:20px; z-index:50;
+  }
+  .phone.light .notch{ background:#05070a; }
+  .theme-toggle{
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface); border:1px solid var(--line); border-radius:100px;
+    padding:6px 12px; cursor:pointer; font-family:'JetBrains Mono', monospace;
+    font-size:11px; color:var(--ink-dim); box-shadow:0 6px 16px -6px rgba(0,0,0,0.4);
+  }
+  .theme-toggle svg{ width:14px; height:14px; }
+
+  /* ---- toggle switch (promemoria) ---- */
+  .switch{
+    width:38px; height:22px; border-radius:100px; background:var(--surface-2);
+    border:1px solid var(--line); position:relative; cursor:pointer; flex-shrink:0;
+    transition: background .15s ease;
+  }
+  .switch.on{ background:var(--teal); border-color:transparent; }
+  .switch::after{
+    content:''; position:absolute; top:2px; left:2px; width:16px; height:16px;
+    border-radius:50%; background:var(--ink); transition: transform .15s ease;
+  }
+  .switch.on::after{ transform:translateX(16px); background:#0e1316; }
+  .reminder-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; border-top:1px solid var(--line); }
+  .reminder-row:first-child{ border-top:none; }
+  .reminder-row .rt{ font-size:13.5px; font-weight:500; }
+  .reminder-row .rs{ font-size:11px; color:var(--ink-faint); font-family:'JetBrains Mono', monospace; margin-top:2px; }
+
+  /* ---- filtri log ---- */
+  .filter-row{ display:flex; gap:7px; overflow-x:auto; padding:2px 0 4px; }
+  .filter-row::-webkit-scrollbar{ display:none; }
+  .filter-chip{
+    flex-shrink:0; font-family:'JetBrains Mono', monospace; font-size:11px;
+    padding:7px 12px; border-radius:100px; border:1px solid var(--line);
+    color:var(--ink-dim); background:transparent; cursor:pointer;
+  }
+  .filter-chip.active{ background:var(--teal); border-color:transparent; color:var(--night); font-weight:600; }
+
+  /* ---- QR share ---- */
+  .qr-card{ display:flex; align-items:center; gap:14px; }
+  .qr-box{ width:64px; height:64px; border-radius:12px; background:#fff; padding:6px; flex-shrink:0; }
+  .qr-box svg{ width:100%; height:100%; }
+  .screens{ flex:1; overflow:hidden; position:relative; }
+  .screen{
+    position:absolute; inset:0;
+    overflow-y:auto;
+    padding:56px 20px 100px;
+    opacity:0; visibility:hidden; transform:translateY(6px);
+    transition:opacity .22s ease, transform .22s ease;
+  }
+  .screen.active{ opacity:1; visibility:visible; transform:translateY(0); }
+  .screen::-webkit-scrollbar{ display:none; }
+
+  /* ---- shared bits ---- */
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+  }
+  h1.page-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:26px;
+    margin-top:6px;
+    letter-spacing:-0.01em;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+  }
+  .stack{ display:flex; flex-direction:column; gap:12px; }
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .chip{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    padding:5px 10px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    color:var(--ink-dim);
+    white-space:nowrap;
+  }
+  .chip.on{ background:var(--sage-dim); border-color:transparent; color:var(--sage); }
+  .chip.clay{ background:var(--clay-dim); border-color:transparent; color:var(--clay); }
+  .chip.teal{ background:var(--teal-dim); border-color:transparent; color:var(--teal); }
+  .btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--night);
+    background:var(--teal);
+    border:none;
+    border-radius:13px;
+    padding:14px 16px;
+    width:100%;
+    cursor:pointer;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:active{ transform:scale(0.98); filter:brightness(0.95); }
+  .btn.ghost{
+    background:transparent; color:var(--ink); border:1px solid var(--line);
+  }
+  .section-title{
+    font-size:13px; font-weight:600; color:var(--ink-dim);
+    text-transform:uppercase; letter-spacing:0.06em; margin: 22px 0 10px;
+  }
+  .section-title:first-of-type{ margin-top:0; }
+
+  /* ---- segmented control ---- */
+  .segmented{
+    display:flex; background:var(--surface-2); border-radius:12px; padding:4px; gap:4px; margin-top:16px;
+  }
+  .seg-btn{
+    flex:1; text-align:center; padding:9px 6px; font-size:12.5px; font-weight:600;
+    border-radius:9px; border:none; background:transparent; color:var(--ink-faint); cursor:pointer;
+    font-family:'Space Grotesk', sans-serif;
+  }
+  .seg-btn.active{ background:var(--night); color:var(--ink); }
+  .sub-panel{ display:none; }
+  .sub-panel.active{ display:block; }
+
+  /* ---- gecko switcher (Home) ---- */
+  .gecko-switch{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 4px; }
+  .gecko-switch::-webkit-scrollbar{ display:none; }
+  .gswitch-item{
+    flex-shrink:0; display:flex; align-items:center; gap:7px;
+    background:var(--surface); border:1px solid var(--line); border-radius:100px;
+    padding:6px 12px 6px 6px; cursor:pointer;
+  }
+  .gswitch-item.active{ border-color: var(--teal); background:var(--teal-dim); }
+  .gswitch-dot{ width:22px; height:22px; border-radius:50%; flex-shrink:0; }
+  .gswitch-item span{ font-size:12.5px; font-weight:500; white-space:nowrap; }
+
+  /* ---- HOME ---- */
+  .hero{
+    background: linear-gradient(150deg, #1c2429 0%, #161c20 55%);
+    border-radius:22px;
+    border:1px solid var(--line);
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-top{ display:flex; align-items:center; justify-content:space-between; }
+  .gecko-name{ font-family:'Fraunces', serif; font-size:23px; font-weight:500; }
+  .gecko-meta{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-dim); margin-top:3px;}
+  .mascot{ width:58px; height:58px; flex-shrink:0; }
+  @keyframes breathe{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.045);} }
+  .mascot{ animation: breathe 4.5s ease-in-out infinite; }
+
+  .hero-stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+  .hstat{ background:rgba(0,0,0,0.2); border-radius:14px; padding:12px 14px; }
+  .hstat .num{ font-family:'JetBrains Mono', monospace; font-size:19px; color:var(--teal); }
+  .hstat .lbl{ font-size:11px; color:var(--ink-dim); margin-top:2px; }
+
+  .gauge-wrap{ display:flex; align-items:center; gap:16px; }
+  .gauge{ width:72px; height:72px; border-radius:50%; flex-shrink:0;
+    background: conic-gradient(var(--clay) 0% 68%, rgba(255,255,255,0.06) 68% 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gauge-inner{ width:56px; height:56px; border-radius:50%; background:var(--surface);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .gauge-inner b{ font-family:'JetBrains Mono', monospace; font-size:14px; }
+  .gauge-inner span{ font-size:9px; color:var(--ink-faint); }
+
+  .list-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--line); }
+  .list-row:first-child{ border-top:none; }
+  .dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .list-row .meta{ flex:1; }
+  .list-row .meta .t{ font-size:14px; }
+  .list-row .meta .s{ font-size:11px; color:var(--ink-faint); font-family:'JetBrains Mono', monospace; }
+
+  .env-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .env-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:15px; text-align:center; }
+  .env-card .val{ font-family:'JetBrains Mono', monospace; font-size:20px; color:var(--teal); margin-top:8px; }
+  .env-card .lbl{ font-size:11px; color:var(--ink-dim); margin-top:2px; }
+  .shed-track{ position:relative; height:6px; background:rgba(255,255,255,0.08); border-radius:6px; margin:14px 0 6px; }
+  .shed-fill{ position:absolute; left:0; top:0; height:100%; background:var(--sage); border-radius:6px; }
+
+  /* ---- GECHI (allevamento) ---- */
+  .breeder-summary{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; }
+  .bs-item{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 8px; text-align:center; }
+  .bs-item .num{ font-family:'JetBrains Mono', monospace; font-size:17px; color:var(--teal); }
+  .bs-item .lbl{ font-size:9.5px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:0.04em; }
+
+  .gecko-card{ display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:16px; padding:13px; cursor:pointer; transition:border-color .15s ease; }
+  .gecko-card.active{ border-color:var(--teal); background:var(--teal-dim); }
+  .gc-avatar{ width:44px; height:44px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .gc-info{ flex:1; }
+  .gc-info .name{ font-size:14.5px; font-weight:600; }
+  .gc-info .morph{ font-size:11.5px; color:var(--ink-dim); margin-top:1px; }
+  .gc-side{ text-align:right; }
+  .gc-side .w{ font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--ink); }
+  .gc-side .a{ font-size:10.5px; color:var(--ink-faint); margin-top:2px; }
+
+  /* ---- PASTI / PIANO ---- */
+  .meal-item{ border:1px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+  .meal-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .meal-date{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-faint); }
+  .meal-food{ font-size:15px; font-weight:600; margin-top:2px; }
+  .meal-tags{ display:flex; gap:6px; flex-wrap:wrap; }
+
+  .plan-card{ border:1px solid var(--line); border-radius:16px; padding:15px; position:relative; }
+  .plan-card.current{ border-color:var(--teal); background:var(--teal-dim); }
+  .plan-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .plan-age{ font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.05em; }
+  .plan-stage{ font-size:15px; font-weight:600; margin-top:3px; }
+  .plan-badge{ font-family:'JetBrains Mono', monospace; font-size:10px; background:var(--teal); color:var(--night); padding:3px 8px; border-radius:100px; font-weight:600; }
+  .plan-detail{ font-size:12.5px; color:var(--ink-dim); margin-top:9px; line-height:1.55; }
+  .plan-edit{ position:absolute; top:14px; right:14px; width:26px; height:26px; border-radius:8px; background:var(--surface-2); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .plan-edit svg{ width:13px; height:13px; }
+
+  /* ---- STATISTICHE ---- */
+  .bars{ display:flex; align-items:flex-end; gap:8px; height:120px; margin-top:6px; }
+  .bar{ flex:1; background:linear-gradient(180deg, var(--teal), rgba(91,156,147,0.35)); border-radius:6px 6px 2px 2px; position:relative; }
+  .bars-wrap{ display:flex; }
+  .bars-col{ flex:1; display:flex; flex-direction:column; }
+  .bar-lbl{ text-align:center; font-size:10px; color:var(--ink-faint); margin-top:6px; font-family:'JetBrains Mono', monospace; }
+  .weight-svg{ width:100%; height:110px; margin-top:8px; }
+
+  /* ---- SPESE ---- */
+  .expense-row{ display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--line); }
+  .expense-row:first-child{ border-top:none; }
+  .exp-icon{ width:36px; height:36px; border-radius:10px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .exp-bar-bg{ height:4px; background:rgba(255,255,255,0.06); border-radius:4px; margin-top:6px; overflow:hidden; }
+  .exp-bar-fill{ height:100%; background:var(--teal); border-radius:4px; }
+
+  /* ---- nav ---- */
+  .tabbar{
+    position:absolute; left:0; right:0; bottom:0;
+    background:rgba(14,19,22,0.92);
+    backdrop-filter: blur(10px);
+    border-top:1px solid var(--line);
+    display:flex;
+    padding:9px 4px 20px;
+    z-index:40;
+  }
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; color:var(--ink-faint); cursor:pointer;
+    font-family:'Space Grotesk', sans-serif; font-size:9.5px; padding:5px 2px;
+  }
+  .tab svg{ width:20px; height:20px; }
+  .tab.active{ color:var(--teal); }
+  .tab.active svg{ filter: drop-shadow(0 0 6px rgba(91,156,147,0.5)); }
+  .fab{
+    position:absolute; right:20px; bottom:100px; z-index:41;
+    width:52px; height:52px; border-radius:50%;
+    background:var(--teal); color:var(--night); border:none;
+    font-size:24px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 24px -8px rgba(91,156,147,0.5);
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="stage-label">demo · Terra, gestione allevamento geco leopardino</div>
+  <button class="theme-toggle" id="theme-toggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.4 19.6 6 18M18 6l1.6-1.6"/></svg>
+    <span id="theme-toggle-label">Tema scuro</span>
+  </button>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screens">
+
+      <!-- GECHI (allevamento) -->
+      <section class="screen active" id="gechi">
+        <div class="eyebrow">Allevamento</div>
+        <h1 class="page-title">I tuoi gechi</h1>
+
+        <div class="breeder-summary">
+          <div class="bs-item"><div class="num">3</div><div class="lbl">animali</div></div>
+          <div class="bs-item"><div class="num">1</div><div class="lbl">da pasto oggi</div></div>
+          <div class="bs-item"><div class="num">€61</div><div class="lbl">spese · agosto</div></div>
+        </div>
+
+        <div class="section-title">Tutti gli animali</div>
+        <div class="stack" id="gecko-list"></div>
+
+        <div style="margin-top:18px;">
+          <button class="btn ghost">+ Aggiungi geco</button>
+        </div>
+      </section>
+
+      <!-- HOME (scheda animale selezionato) -->
+      <section class="screen" id="home">
+        <div class="eyebrow">Scheda animale</div>
+        <h1 class="page-title" id="home-title">Sabbia</h1>
+
+        <div class="gecko-switch" id="gecko-switch"></div>
+
+        <div class="segmented">
+          <button class="seg-btn active" data-panel="home-panorama">Panoramica</button>
+          <button class="seg-btn" data-panel="home-cura">Cura & ambiente</button>
+        </div>
+
+        <div class="sub-panel active" id="home-panorama">
+          <div class="hero" style="margin-top:16px;">
+            <div class="hero-top">
+              <div>
+                <div class="gecko-name" id="hero-name">Sabbia</div>
+                <div class="gecko-meta" id="hero-meta">62 giorni · nato il 12 giugno</div>
+              </div>
+              <svg class="mascot" viewBox="0 0 64 64" fill="none">
+                <ellipse cx="32" cy="38" rx="20" ry="11" fill="var(--teal)" id="mascot-body"/>
+                <ellipse cx="14" cy="40" rx="8" ry="4" fill="var(--teal)" id="mascot-tail" transform="rotate(-18 14 40)"/>
+                <circle cx="24" cy="34" r="2" fill="#0e1316"/>
+                <circle cx="34" cy="35" r="2.4" fill="#0e1316"/>
+                <circle cx="40" cy="41" r="1.8" fill="#0e1316"/>
+                <ellipse cx="47" cy="27" rx="7" ry="6" fill="var(--teal)" id="mascot-head"/>
+                <circle cx="49" cy="25" r="1.6" fill="#0e1316"/>
+              </svg>
+            </div>
+            <div class="hero-stats" id="hero-stats">
+              <div class="hstat"><div class="num">2gg</div><div class="lbl">al prossimo pasto</div></div>
+              <div class="hstat"><div class="num">6.4g</div><div class="lbl">peso attuale</div></div>
+              <div class="hstat"><div class="num">9gg</div><div class="lbl">dall'ultima muta</div></div>
+              <div class="hstat"><div class="num">31°C</div><div class="lbl">hot spot ora</div></div>
+            </div>
+          </div>
+
+          <div class="section-title">Crescita</div>
+          <div class="card row">
+            <div>
+              <div style="font-size:11px; color:var(--ink-dim);">Peso</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:18px; color:var(--teal);">6.4 g <span style="font-size:11px; color:var(--sage);">↑</span></div>
+            </div>
+            <div style="width:1px; height:28px; background:var(--line);"></div>
+            <div>
+              <div style="font-size:11px; color:var(--ink-dim);">Lunghezza</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:18px; color:var(--teal);">8.2 cm <span style="font-size:11px; color:var(--sage);">↑</span></div>
+            </div>
+            <div style="width:1px; height:28px; background:var(--line);"></div>
+            <div>
+              <div style="font-size:11px; color:var(--ink-dim);">Unità</div>
+              <div style="font-size:12.5px; margin-top:4px;">g / cm</div>
+            </div>
+          </div>
+
+          <div class="section-title">Condividi scheda</div>
+          <div class="card qr-card">
+            <div class="qr-box">
+              <svg viewBox="0 0 29 29"><path fill="#0e1316" d="M0 0h7v7h-7zM8 0h1v1h-1zM11 0h3v1h-3zM16 0h1v3h-1zM18 0h7v7h-7zM1 1h5v5h-5zM19 1h5v5h-5zM9 2h1v2h-1zM12 2h1v1h-1zM14 2h1v2h-1zM9 5h2v1h-2zM12 5h1v2h-1zM2 2h3v3h-3zM20 2h3v3h-3zM0 8h1v3h-1zM3 8h1v1h-1zM6 8h2v1h-2zM9 8h4v1h-4zM15 8h2v2h-2zM18 8h1v2h-1zM20 8h1v3h-1zM22 8h3v1h-3zM26 8h3v3h-3zM1 9h1v2h-1zM4 9h2v1h-2zM10 9h1v3h-1zM13 9h1v4h-1zM16 9h1v1h-1zM24 9h1v3h-1zM0 11h1v1h-1zM2 11h4v1h-4zM7 11h1v3h-1zM9 11h1v1h-1zM17 11h4v1h-4zM22 11h1v4h-1zM26 11h2v1h-2zM1 12h1v3h-1zM3 12h1v1h-1zM5 12h1v3h-1zM11 12h2v1h-2zM15 12h2v1h-2zM20 12h1v1h-1zM24 12h2v1h-2zM3 14h1v1h-1zM8 14h2v1h-2zM11 14h1v3h-1zM14 14h1v3h-1zM17 14h1v2h-1zM19 14h1v3h-1zM21 14h1v3h-1zM26 14h3v1h-3zM0 16h6v1h-6zM9 16h1v2h-1zM15 16h2v1h-2zM23 16h1v3h-1zM26 16h1v2h-1zM0 18h1v7h-1zM2 18h1v1h-1zM4 18h3v1h-3zM8 18h1v3h-1zM10 18h3v1h-3zM16 18h1v3h-1zM18 18h1v1h-1zM20 18h2v1h-2zM25 18h1v4h-1zM27 18h2v1h-2zM2 20h4v3h-4zM12 20h1v3h-1zM14 20h1v1h-1zM18 20h1v3h-1zM20 20h2v1h-2zM23 20h2v1h-2zM27 20h1v4h-1zM9 21h1v1h-1zM10 21h2v3h-2zM14 22h2v1h-2zM20 22h1v3h-1zM22 22h1v3h-1zM24 22h2v1h-2zM8 23h1v3h-1zM16 23h1v1h-1zM1 24h6v1h-6zM9 24h1v2h-1zM14 24h1v1h-1zM17 24h1v3h-1zM19 24h1v1h-1zM26 24h3v1h-3zM11 25h2v3h-2zM15 25h1v3h-1zM21 25h3v1h-3zM25 25h1v3h-1zM27 25h2v1h-2zM9 26h1v2h-1zM19 26h1v2h-1zM23 27h1v1h-1zM26 27h1v2h-1z"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:13.5px; font-weight:600;">QR profilo animale</div>
+              <div style="font-size:11.5px; color:var(--ink-dim); margin-top:2px;">Utile da mostrare a pet-sitter o veterinario per accedere subito ai dati di Sabbia</div>
+            </div>
+          </div>
+
+          <div class="section-title">Piano alimentare per età</div>
+          <div class="card row">
+            <div class="gauge-wrap">
+              <div class="gauge"><div class="gauge-inner"><b>D3</b><span>68%</span></div></div>
+              <div>
+                <div style="font-size:14px; font-weight:600;" id="plan-name">Fase giovanile</div>
+                <div style="font-size:12px; color:var(--ink-dim);" id="plan-freq">pasto quasi ogni giorno, calcio+D3 quasi sempre</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Attività recente</div>
+          <div class="card">
+            <div class="list-row">
+              <div class="dot" style="background:var(--sage);"></div>
+              <div class="meta"><div class="t">Pasto: 5 grilli · calcio+D3</div><div class="s">IERI · 19:20</div></div>
+            </div>
+            <div class="list-row">
+              <div class="dot" style="background:var(--teal);"></div>
+              <div class="meta"><div class="t">Peso registrato: 6.4 g</div><div class="s">IERI · 19:05</div></div>
+            </div>
+            <div class="list-row">
+              <div class="dot" style="background:var(--clay);"></div>
+              <div class="meta"><div class="t">Muta completata</div><div class="s">3 giorni fa</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-panel" id="home-cura">
+          <div class="env-grid" style="margin-top:16px;">
+            <div class="env-card"><div class="lbl">Hot spot</div><div class="val">31°C</div></div>
+            <div class="env-card"><div class="lbl">Cold spot</div><div class="val">24°C</div></div>
+            <div class="env-card"><div class="lbl">Umidità</div><div class="val">38%</div></div>
+            <div class="env-card"><div class="lbl">Notturna</div><div class="val">22°C</div></div>
+          </div>
+
+          <div class="section-title">Prossima muta stimata</div>
+          <div class="card">
+            <div class="row">
+              <span style="font-size:13px; color:var(--ink-dim);">9 di 18 giorni tipici</span>
+              <span class="chip on">in linea</span>
+            </div>
+            <div class="shed-track"><div class="shed-fill" style="width:50%;"></div></div>
+          </div>
+
+          <div class="section-title">Note comportamentali</div>
+          <div class="card stack" style="gap:10px;">
+            <div class="list-row" style="border-top:none; padding-top:0;">
+              <div class="dot" style="background:var(--sage);"></div>
+              <div class="meta"><div class="t">Esplora attivamente la sera</div><div class="s">OGGI</div></div>
+            </div>
+            <div class="list-row">
+              <div class="dot" style="background:var(--teal);"></div>
+              <div class="meta"><div class="t">Codice fecale regolare</div><div class="s">21 AGO</div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <button class="btn ghost">+ Aggiungi nota</button>
+          </div>
+
+          <div class="section-title">Promemoria personalizzati</div>
+          <div class="card">
+            <div class="reminder-row">
+              <div>
+                <div class="rt">Pasto</div>
+                <div class="rs">ogni giorno · 19:00</div>
+              </div>
+              <div class="switch on" data-reminder></div>
+            </div>
+            <div class="reminder-row">
+              <div>
+                <div class="rt">Peso settimanale</div>
+                <div class="rs">ogni lunedì · 09:00</div>
+              </div>
+              <div class="switch on" data-reminder></div>
+            </div>
+            <div class="reminder-row">
+              <div>
+                <div class="rt">Pulizia terrario</div>
+                <div class="rs">ogni 14 giorni</div>
+              </div>
+              <div class="switch" data-reminder></div>
+            </div>
+            <div class="reminder-row">
+              <div>
+                <div class="rt">Controllo integratori</div>
+                <div class="rs">ogni mese</div>
+              </div>
+              <div class="switch on" data-reminder></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button class="btn ghost">+ Nuovo promemoria</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PASTI -->
+      <section class="screen" id="pasti">
+        <div class="eyebrow">Alimentazione · Sabbia</div>
+        <h1 class="page-title">Pasti</h1>
+
+        <div class="segmented">
+          <button class="seg-btn active" data-panel="pasti-registro">Registro</button>
+          <button class="seg-btn" data-panel="pasti-piano">Piano per età</button>
+        </div>
+
+        <div class="sub-panel active" id="pasti-registro">
+          <div class="card row" style="margin-top:16px;">
+            <div>
+              <div style="font-size:13px; color:var(--ink-dim);">Questa settimana</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:22px; color:var(--teal);">5 pasti</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px; color:var(--ink-dim);">Calcio+D3 rispettato</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:22px; color:var(--sage);">5/5</div>
+            </div>
+          </div>
+
+          <div class="section-title">Cronologia</div>
+          <div class="filter-row">
+            <button class="filter-chip active" data-filter="tutti">Tutti</button>
+            <button class="filter-chip" data-filter="accettato">Accettati</button>
+            <button class="filter-chip" data-filter="rifiutato">Rifiutati</button>
+            <button class="filter-chip" data-filter="d3">Con calcio+D3</button>
+          </div>
+          <div class="stack" id="meal-list">
+            <div class="meal-item" data-esito="accettato" data-d3="1">
+              <div class="meal-top">
+                <div>
+                  <div class="meal-date">IERI · 19:20</div>
+                  <div class="meal-food">5 grilli piccoli</div>
+                </div>
+                <div class="chip">accettato</div>
+              </div>
+              <div class="meal-tags">
+                <div class="chip on">● Calcio + D3</div>
+              </div>
+            </div>
+
+            <div class="meal-item" data-esito="accettato" data-d3="1">
+              <div class="meal-top">
+                <div>
+                  <div class="meal-date">21 AGO · 19:15</div>
+                  <div class="meal-food">4 grilli + 1 blatta</div>
+                </div>
+                <div class="chip">accettato</div>
+              </div>
+              <div class="meal-tags">
+                <div class="chip on">● Calcio + D3</div>
+              </div>
+            </div>
+
+            <div class="meal-item" data-esito="rifiutato" data-d3="0">
+              <div class="meal-top">
+                <div>
+                  <div class="meal-date">19 AGO · 19:30</div>
+                  <div class="meal-food">tarme della farina</div>
+                </div>
+                <div class="chip" style="color:var(--danger); border-color:transparent; background:rgba(193,104,91,0.16);">rifiutato</div>
+              </div>
+              <div class="meal-tags">
+                <div class="chip clay">● Solo calcio</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <button class="btn">+ Aggiungi pasto</button>
+          </div>
+        </div>
+
+        <div class="sub-panel" id="pasti-piano">
+          <div class="card" style="margin-top:16px; background:var(--teal-dim); border-color:transparent;">
+            <div style="font-size:12.5px; color:var(--ink-dim); line-height:1.5;">
+              Il piano si applica in automatico in base all'età dell'animale, e resta modificabile in qualsiasi momento — utile se il veterinario consiglia una variazione.
+            </div>
+          </div>
+
+          <div class="section-title">Fasce d'età</div>
+          <div class="stack">
+            <div class="plan-card current">
+              <button class="plan-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+              <div class="plan-top">
+                <div>
+                  <div class="plan-age">0 – 2 mesi</div>
+                  <div class="plan-stage">Neonato</div>
+                </div>
+                <div class="plan-badge">ATTUALE</div>
+              </div>
+              <div class="plan-detail">Pasto ogni giorno · grilli o dubia di taglia molto piccola · calcio con D3 quasi ad ogni pasto</div>
+            </div>
+
+            <div class="plan-card">
+              <button class="plan-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+              <div class="plan-top">
+                <div>
+                  <div class="plan-age">2 – 12 mesi</div>
+                  <div class="plan-stage">Giovanile</div>
+                </div>
+              </div>
+              <div class="plan-detail">Pasto a giorni alterni · prede di taglia media · calcio con D3 alla maggior parte dei pasti</div>
+            </div>
+
+            <div class="plan-card">
+              <button class="plan-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+              <div class="plan-top">
+                <div>
+                  <div class="plan-age">12 – 18 mesi</div>
+                  <div class="plan-stage">Subadulto</div>
+                </div>
+              </div>
+              <div class="plan-detail">3–4 pasti a settimana · prede più grandi · calcio con D3 2–3 volte a settimana</div>
+            </div>
+
+            <div class="plan-card">
+              <button class="plan-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+              <div class="plan-top">
+                <div>
+                  <div class="plan-age">18+ mesi</div>
+                  <div class="plan-stage">Adulto</div>
+                </div>
+              </div>
+              <div class="plan-detail">2–3 pasti a settimana · attenzione al sovrappeso · calcio senza D3 quasi sempre, D3 1x/settimana, multivitaminico 1x/settimana</div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <button class="btn ghost">+ Nuova fascia personalizzata</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATISTICHE -->
+      <section class="screen" id="stats">
+        <div class="eyebrow">Andamento · Sabbia</div>
+        <h1 class="page-title">Statistiche</h1>
+
+        <div class="section-title">Peso nel tempo</div>
+        <div class="card">
+          <svg class="weight-svg" viewBox="0 0 300 110" preserveAspectRatio="none">
+            <polyline points="0,90 40,85 80,78 120,68 160,60 200,48 240,40 280,26"
+              fill="none" stroke="#5b9c93" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="280" cy="26" r="4" fill="#af8a63"/>
+          </svg>
+          <div class="row" style="margin-top:4px;">
+            <span style="font-size:11px; color:var(--ink-faint);">giu</span>
+            <span style="font-size:11px; color:var(--ink-faint);">lug</span>
+            <span style="font-size:11px; color:var(--ink-faint);">ago</span>
+          </div>
+        </div>
+
+        <div class="section-title">Pasti per settimana</div>
+        <div class="card">
+          <div class="bars">
+            <div class="bars-col"><div class="bar" style="height:60%;"></div></div>
+            <div class="bars-col"><div class="bar" style="height:75%;"></div></div>
+            <div class="bars-col"><div class="bar" style="height:50%;"></div></div>
+            <div class="bars-col"><div class="bar" style="height:90%;"></div></div>
+            <div class="bars-col"><div class="bar" style="height:100%; background:linear-gradient(180deg, var(--clay), rgba(175,138,99,0.35));"></div></div>
+          </div>
+          <div class="bars">
+            <div class="bar-lbl" style="flex:1;">S1</div>
+            <div class="bar-lbl" style="flex:1;">S2</div>
+            <div class="bar-lbl" style="flex:1;">S3</div>
+            <div class="bar-lbl" style="flex:1;">S4</div>
+            <div class="bar-lbl" style="flex:1;">S5</div>
+          </div>
+        </div>
+
+        <div class="section-title">Riepilogo</div>
+        <div class="card stack" style="gap:10px;">
+          <div class="row"><span style="font-size:13px; color:var(--ink-dim);">Intervallo medio muta</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">18 giorni</span></div>
+          <div class="row"><span style="font-size:13px; color:var(--ink-dim);">Crescita ultimo mese</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--sage);">+1.2 g</span></div>
+          <div class="row"><span style="font-size:13px; color:var(--ink-dim);">Pasti rifiutati</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">1 su 12</span></div>
+        </div>
+
+        <div style="margin-top:18px;">
+          <button class="btn ghost" onclick="alert('Demo: qui verrebbe esportato un CSV con pasti, peso, lunghezza, mute e spese')">⭳ Esporta dati (CSV)</button>
+        </div>
+      </section>
+
+      <!-- SPESE -->
+      <section class="screen" id="spese">
+        <div class="eyebrow">Budget</div>
+        <h1 class="page-title">Spese</h1>
+
+        <div class="segmented">
+          <button class="seg-btn active" data-panel="spese-geco">Sabbia</button>
+          <button class="seg-btn" data-panel="spese-tot">Tutto l'allevamento</button>
+        </div>
+
+        <div class="sub-panel active" id="spese-geco">
+          <div class="card" style="margin-top:16px; text-align:center; padding:22px;">
+            <div style="font-size:12px; color:var(--ink-dim);">Totale · agosto 2026</div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:30px; color:var(--teal); margin-top:6px;">€ 22,80</div>
+          </div>
+
+          <div class="section-title">Per categoria</div>
+          <div class="card">
+            <div class="expense-row">
+              <div class="exp-icon">🦗</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Insetti</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 12,00</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:52%;"></div></div>
+              </div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-icon">💊</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Integratori</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 6,50</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:28%;"></div></div>
+              </div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-icon">🩺</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Veterinario</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 4,30</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:19%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <button class="btn ghost">+ Aggiungi spesa</button>
+          </div>
+        </div>
+
+        <div class="sub-panel" id="spese-tot">
+          <div class="card" style="margin-top:16px; text-align:center; padding:22px;">
+            <div style="font-size:12px; color:var(--ink-dim);">Totale allevamento · agosto 2026</div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:30px; color:var(--teal); margin-top:6px;">€ 61,40</div>
+          </div>
+
+          <div class="section-title">Per animale</div>
+          <div class="card">
+            <div class="expense-row">
+              <div class="exp-icon" style="background:var(--teal-dim);">🦎</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Sabbia</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 22,80</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:37%;"></div></div>
+              </div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-icon" style="background:var(--clay-dim);">🦎</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Vulcano</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 24,10</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:39%; background:var(--clay);"></div></div>
+              </div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-icon" style="background:var(--sage-dim);">🦎</div>
+              <div style="flex:1;">
+                <div class="row"><span style="font-size:14px;">Luna</span><span style="font-family:'JetBrains Mono', monospace; font-size:13px;">€ 14,50</span></div>
+                <div class="exp-bar-bg"><div class="exp-bar-fill" style="width:24%; background:var(--sage);"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <button class="fab" onclick="alert('Azione rapida: nuovo pasto / peso / nota')">+</button>
+
+    <nav class="tabbar">
+      <button class="tab active" data-target="gechi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="9" r="3.2"/><circle cx="17" cy="10.5" r="2.4"/><path d="M2.5 19c.5-3.2 2.8-5.4 5.5-5.4s5 2.2 5.5 5.4"/><path d="M13.2 19c.4-2.3 1.9-4 3.8-4s3.4 1.7 3.8 4"/></svg>
+        Gechi
+      </button>
+      <button class="tab" data-target="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        Home
+      </button>
+      <button class="tab" data-target="pasti">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 3"/></svg>
+        Pasti
+      </button>
+      <button class="tab" data-target="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-6"/></svg>
+        Statistiche
+      </button>
+      <button class="tab" data-target="spese">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9 15c0 1.1 1.3 2 3 2s3-.9 3-2-1.3-1.7-3-2-3-.9-3-2 1.3-2 3-2 3 .9 3 2"/></svg>
+        Spese
+      </button>
+    </nav>
+  </div>
+</div>
+
+<script>
+  // ---- dati demo: allevamento con più gechi ----
+  const geckos = [
+    {
+      id:'sabbia', name:'Sabbia', morph:'Normal / Wild type', color:'var(--teal)', colorDim:'var(--teal-dim)',
+      age:'62 giorni', born:'nato il 12 giugno', weight:'6.4 g',
+      nextMeal:'2gg', lastShed:'9gg', hotspot:'31°C',
+      planName:'Fase neonatale', planFreq:'pasto ogni giorno, calcio+D3 quasi sempre',
+    },
+    {
+      id:'vulcano', name:'Vulcano', morph:'Mack Snow · maschio', color:'var(--clay)', colorDim:'var(--clay-dim)',
+      age:'2 anni e 1 mese', born:'nato il 3 luglio 2024', weight:'68 g',
+      nextMeal:'1gg', lastShed:'21gg', hotspot:'30°C',
+      planName:'Fase adulta', planFreq:'2–3 pasti a settimana, D3 1x/settimana',
+    },
+    {
+      id:'luna', name:'Luna', morph:'Tangerine · femmina', color:'var(--sage)', colorDim:'var(--sage-dim)',
+      age:'7 mesi', born:'nata il 14 gennaio', weight:'24 g',
+      nextMeal:'oggi', lastShed:'12gg', hotspot:'31°C',
+      planName:'Fase giovanile', planFreq:'a giorni alterni, calcio+D3 quasi sempre',
+    }
+  ];
+  let currentId = 'sabbia';
+
+  function renderGeckoList(){
+    const wrap = document.getElementById('gecko-list');
+    wrap.innerHTML = geckos.map(g => `
+      <div class="gecko-card ${g.id===currentId?'active':''}" data-id="${g.id}">
+        <div class="gc-avatar" style="background:${g.colorDim};">
+          <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+            <ellipse cx="32" cy="38" rx="20" ry="11" fill="${g.color}"/>
+            <ellipse cx="47" cy="27" rx="7" ry="6" fill="${g.color}"/>
+          </svg>
+        </div>
+        <div class="gc-info">
+          <div class="name">${g.name}</div>
+          <div class="morph">${g.morph}</div>
+        </div>
+        <div class="gc-side">
+          <div class="w">${g.weight}</div>
+          <div class="a">${g.age}</div>
+        </div>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('.gecko-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        currentId = card.dataset.id;
+        renderAll();
+        // porta l'utente sulla scheda dell'animale selezionato
+        document.querySelector('.tab[data-target="home"]').click();
+      });
+    });
+  }
+
+  function renderGeckoSwitch(){
+    const wrap = document.getElementById('gecko-switch');
+    wrap.innerHTML = geckos.map(g => `
+      <div class="gswitch-item ${g.id===currentId?'active':''}" data-id="${g.id}">
+        <div class="gswitch-dot" style="background:${g.colorDim};"></div>
+        <span>${g.name}</span>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('.gswitch-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        currentId = item.dataset.id;
+        renderAll();
+      });
+    });
+  }
+
+  function renderHome(){
+    const g = geckos.find(x=>x.id===currentId);
+    document.getElementById('home-title').textContent = g.name;
+    document.getElementById('hero-name').textContent = g.name;
+    document.getElementById('hero-meta').textContent = `${g.age} · ${g.born}`;
+    document.getElementById('plan-name').textContent = g.planName;
+    document.getElementById('plan-freq').textContent = g.planFreq;
+    ['mascot-body','mascot-tail','mascot-head'].forEach(id=>{
+      document.getElementById(id).setAttribute('fill', g.color.replace('var(','').replace(')',''));
+    });
+    document.getElementById('hero-stats').innerHTML = `
+      <div class="hstat"><div class="num">${g.nextMeal}</div><div class="lbl">al prossimo pasto</div></div>
+      <div class="hstat"><div class="num">${g.weight}</div><div class="lbl">peso attuale</div></div>
+      <div class="hstat"><div class="num">${g.lastShed}</div><div class="lbl">dall'ultima muta</div></div>
+      <div class="hstat"><div class="num">${g.hotspot}</div><div class="lbl">hot spot ora</div></div>
+    `;
+    document.querySelectorAll('#pasti .eyebrow, #stats .eyebrow')[0].textContent = `Alimentazione · ${g.name}`;
+    document.querySelectorAll('#pasti .eyebrow, #stats .eyebrow')[1].textContent = `Andamento · ${g.name}`;
+  }
+
+  function renderAll(){ renderGeckoList(); renderGeckoSwitch(); renderHome(); }
+  renderAll();
+
+  // ---- bottom nav ----
+  const tabs = document.querySelectorAll('.tab');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      screens.forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+
+  // ---- segmented controls (dentro ogni schermata) ----
+  document.querySelectorAll('.segmented').forEach(seg=>{
+    const buttons = seg.querySelectorAll('.seg-btn');
+    buttons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        buttons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const parent = seg.parentElement;
+        parent.querySelectorAll(':scope > .sub-panel').forEach(p=>p.classList.remove('active'));
+        document.getElementById(btn.dataset.panel).classList.add('active');
+      });
+    });
+  });
+
+  // ---- demo: tap su un badge calcio/D3 per mostrare il toggle ----
+  document.querySelectorAll('.meal-tags .chip').forEach(chip => {
+    chip.style.cursor = 'pointer';
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('on');
+      chip.classList.toggle('clay');
+    });
+  });
+
+  // ---- tema chiaro / scuro ----
+  const themeBtn = document.getElementById('theme-toggle');
+  const themeLabel = document.getElementById('theme-toggle-label');
+  const phoneEl = document.querySelector('.phone');
+  themeBtn.addEventListener('click', () => {
+    const isLight = phoneEl.classList.toggle('light');
+    themeLabel.textContent = isLight ? 'Tema chiaro' : 'Tema scuro';
+  });
+
+  // ---- toggle promemoria ----
+  document.querySelectorAll('[data-reminder]').forEach(sw => {
+    sw.addEventListener('click', () => sw.classList.toggle('on'));
+  });
+
+  // ---- filtri registro pasti ----
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const f = chip.dataset.filter;
+      document.querySelectorAll('#meal-list .meal-item').forEach(item => {
+        let show = true;
+        if (f === 'accettato') show = item.dataset.esito === 'accettato';
+        if (f === 'rifiutato') show = item.dataset.esito === 'rifiutato';
+        if (f === 'd3') show = item.dataset.d3 === '1';
+        item.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

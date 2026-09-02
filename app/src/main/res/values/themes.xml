@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema di sistema (splash/finestra pre-Compose). Il tema effettivo dell'app
+         è gestito interamente da Compose in ui/theme/Theme.kt. -->
+    <style name="Theme.Terra" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/terra_night</item>
+    </style>
+</resources>

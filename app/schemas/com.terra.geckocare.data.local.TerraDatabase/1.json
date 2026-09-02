@@ -1,0 +1,752 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "e8a4943699ee4aaf68010499f3a6d90e",
+    "entities": [
+      {
+        "tableName": "gecko",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `morph` TEXT NOT NULL, `sesso` TEXT NOT NULL, `dataNascita` INTEGER, `dataAcquisizione` INTEGER, `fotoProfiloPath` TEXT, `descrizione` TEXT NOT NULL, `coloreTag` TEXT NOT NULL, `stato` TEXT NOT NULL, `dataCreazione` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "morph",
+            "columnName": "morph",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sesso",
+            "columnName": "sesso",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataNascita",
+            "columnName": "dataNascita",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dataAcquisizione",
+            "columnName": "dataAcquisizione",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fotoProfiloPath",
+            "columnName": "fotoProfiloPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "descrizione",
+            "columnName": "descrizione",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coloreTag",
+            "columnName": "coloreTag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stato",
+            "columnName": "stato",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataCreazione",
+            "columnName": "dataCreazione",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "gecko_tag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `etichetta` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etichetta",
+            "columnName": "etichetta",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_gecko_tag_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_gecko_tag_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          },
+          {
+            "name": "index_gecko_tag_geckoId_etichetta",
+            "unique": true,
+            "columnNames": [
+              "geckoId",
+              "etichetta"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_gecko_tag_geckoId_etichetta` ON `${TABLE_NAME}` (`geckoId`, `etichetta`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "feeding",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `dataOra` INTEGER NOT NULL, `tipoPreda` TEXT NOT NULL, `quantita` INTEGER NOT NULL, `esito` TEXT NOT NULL, `conCalcio` INTEGER NOT NULL, `conD3` INTEGER NOT NULL, `conMultivitaminico` INTEGER NOT NULL, `note` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataOra",
+            "columnName": "dataOra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipoPreda",
+            "columnName": "tipoPreda",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantita",
+            "columnName": "quantita",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "esito",
+            "columnName": "esito",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conCalcio",
+            "columnName": "conCalcio",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conD3",
+            "columnName": "conD3",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conMultivitaminico",
+            "columnName": "conMultivitaminico",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_feeding_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_feeding_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "growth_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `dataOra` INTEGER NOT NULL, `pesoGrammi` REAL, `lunghezzaCm` REAL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataOra",
+            "columnName": "dataOra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pesoGrammi",
+            "columnName": "pesoGrammi",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lunghezzaCm",
+            "columnName": "lunghezzaCm",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_growth_log_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_growth_log_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "shed_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `dataOra` INTEGER NOT NULL, `completa` INTEGER NOT NULL, `note` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataOra",
+            "columnName": "dataOra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completa",
+            "columnName": "completa",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_shed_log_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shed_log_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "care_note",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `dataOra` INTEGER NOT NULL, `testo` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataOra",
+            "columnName": "dataOra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "testo",
+            "columnName": "testo",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_care_note_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_care_note_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "expense",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER, `categoria` TEXT NOT NULL, `importo` REAL NOT NULL, `data` INTEGER NOT NULL, `note` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoria",
+            "columnName": "categoria",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "importo",
+            "columnName": "importo",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "data",
+            "columnName": "data",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_expense_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_expense_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "feeding_plan_rule",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER, `etaMinGiorni` INTEGER NOT NULL, `etaMaxGiorni` INTEGER NOT NULL, `nomeFase` TEXT NOT NULL, `frequenzaTesto` TEXT NOT NULL, `noteIntegratori` TEXT NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "etaMinGiorni",
+            "columnName": "etaMinGiorni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etaMaxGiorni",
+            "columnName": "etaMaxGiorni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nomeFase",
+            "columnName": "nomeFase",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frequenzaTesto",
+            "columnName": "frequenzaTesto",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "noteIntegratori",
+            "columnName": "noteIntegratori",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_feeding_plan_rule_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_feeding_plan_rule_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "reminder",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER, `tipo` TEXT NOT NULL, `frequenzaTesto` TEXT NOT NULL, `intervalloGiorni` INTEGER NOT NULL, `orarioMinuti` INTEGER NOT NULL, `attivo` INTEGER NOT NULL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tipo",
+            "columnName": "tipo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frequenzaTesto",
+            "columnName": "frequenzaTesto",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intervalloGiorni",
+            "columnName": "intervalloGiorni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orarioMinuti",
+            "columnName": "orarioMinuti",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attivo",
+            "columnName": "attivo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_reminder_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_reminder_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "environment_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `geckoId` INTEGER NOT NULL, `dataOra` INTEGER NOT NULL, `hotSpotC` REAL, `coldSpotC` REAL, `umiditaPercento` REAL, `temperaturaNotturnaC` REAL, FOREIGN KEY(`geckoId`) REFERENCES `gecko`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geckoId",
+            "columnName": "geckoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataOra",
+            "columnName": "dataOra",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hotSpotC",
+            "columnName": "hotSpotC",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "coldSpotC",
+            "columnName": "coldSpotC",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "umiditaPercento",
+            "columnName": "umiditaPercento",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "temperaturaNotturnaC",
+            "columnName": "temperaturaNotturnaC",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_environment_log_geckoId",
+            "unique": false,
+            "columnNames": [
+              "geckoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_environment_log_geckoId` ON `${TABLE_NAME}` (`geckoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "gecko",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "geckoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e8a4943699ee4aaf68010499f3a6d90e')"
+    ]
+  }
+}

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gecko Care</string>
+
+    <!-- Age -->
+    <string name="eta_sconosciuta">Unknown age</string>
+    <string name="relative_oggi">TODAY</string>
+    <string name="relative_ieri">YESTERDAY</string>
+    <plurals name="giorni_fa">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+    <plurals name="age_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="age_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="age_years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+
+    <!-- Suggested gecko tags -->
+    <string name="tag_riproduttore">Breeder</string>
+    <string name="tag_in_vendita">For sale</string>
+    <string name="tag_quarantena">Quarantine</string>
+    <string name="tag_cucciolo">Hatchling</string>
+
+    <!-- Navigation -->
+    <string name="nav_gechi">Geckos</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_pasti">Feeding</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_spese">Expenses</string>
+
+    <string name="fab_add_pasto">Add meal</string>
+    <string name="fab_add_spesa">Add expense</string>
+    <string name="fab_add_gecko">Add gecko</string>
+
+    <!-- Geckos tab -->
+    <string name="gechi_eyebrow">Collection</string>
+    <string name="gechi_title">Your geckos</string>
+    <string name="gechi_stat_animali">animals</string>
+    <string name="gechi_stat_pasto_oggi">feeding today</string>
+    <string name="gechi_stat_spese_mese">expenses · month</string>
+    <string name="gechi_filtra_tag">Filter by tag</string>
+    <string name="gechi_tag_tutti">All</string>
+    <string name="gechi_tutti_animali">All animals</string>
+    <string name="gechi_empty_nessuno">You haven\'t added a gecko yet. Tap \"+ Add gecko\" to get started.</string>
+    <string name="gechi_empty_tag">No animal with this tag.</string>
+    <string name="gechi_aggiungi_button">+ Add gecko</string>
+    <string name="gechi_impostazioni_desc">Settings</string>
+    <string name="gechi_scan_desc">Scan gecko QR code</string>
+    <string name="gechi_scan_prompt">Point the camera at a gecko\'s QR code</string>
+    <string name="gechi_scan_non_riconosciuto">QR code not recognized: no gecko matches this code.</string>
+    <string name="gechi_scan_scheda_importata_titolo">Gecko card (from another device)</string>
+
+    <!-- Gecko form -->
+    <string name="gecko_form_title_modifica">Edit gecko</string>
+    <string name="gecko_form_title_nuovo">New gecko</string>
+    <string name="gecko_form_foto_hint">Tap to choose a photo</string>
+    <string name="gecko_form_nome">Name</string>
+    <string name="gecko_form_nome_placeholder">E.g. Sandy</string>
+    <string name="gecko_form_nome_obbligatorio">Name is required</string>
+    <string name="gecko_form_morph">Morph</string>
+    <string name="gecko_form_morph_placeholder">E.g. Mack Snow</string>
+    <string name="gecko_form_sesso">Sex</string>
+    <string name="gecko_sesso_sconosciuto">Unknown</string>
+    <string name="gecko_sesso_maschio">Male</string>
+    <string name="gecko_sesso_femmina">Female</string>
+    <string name="gecko_form_date_title">Hatch and/or acquisition date</string>
+    <string name="gecko_form_date_hint">Either one is enough: if you don\'t know the exact hatch date, use the \"gotcha day\".</string>
+    <string name="gecko_form_nascita">Hatched</string>
+    <string name="gecko_form_gotcha">Gotcha day</string>
+    <string name="gecko_form_data_non_impostata">Not set</string>
+    <string name="gecko_form_rimuovi_data">Remove date</string>
+    <string name="gecko_form_colore">Identifying color</string>
+    <string name="gecko_form_colore_custom_desc">Custom color</string>
+    <string name="gecko_form_tag">Tags</string>
+    <string name="gecko_form_tag_placeholder">New custom tag</string>
+    <string name="gecko_form_tag_aggiungi_desc">Add tag</string>
+    <string name="gecko_form_descrizione">Description</string>
+    <string name="gecko_form_descrizione_placeholder">General notes about the animal...</string>
+    <string name="gecko_form_salvataggio">Saving…</string>
+    <string name="gecko_form_salva">Save gecko</string>
+
+    <!-- Color picker -->
+    <string name="colorpicker_title">Custom color</string>
+
+    <!-- Common -->
+    <string name="common_annulla">Cancel</string>
+    <string name="common_conferma">Confirm</string>
+    <string name="common_chiudi">Close</string>
+    <string name="common_indietro">Back</string>
+
+    <!-- Home -->
+    <string name="home_eyebrow">Animal profile</string>
+    <string name="home_tab_panoramica">Overview</string>
+    <string name="home_tab_cura">Care &amp; environment</string>
+    <string name="home_empty_title">No geckos yet</string>
+    <string name="home_empty_subtitle">Add one from the Geckos tab to see its page here.</string>
+    <string name="home_crescita">Growth</string>
+    <string name="home_modifica_geco_desc">Edit gecko</string>
+    <string name="home_galleria">Photo gallery</string>
+    <string name="home_galleria_vuota">No photos yet. Add the first one to start the growth diary.</string>
+    <string name="home_galleria_aggiungi_desc">Add photo</string>
+    <string name="home_galleria_elimina">Delete photo</string>
+    <string name="foto_errore_salvataggio">Couldn\'t save the photo: try a different image.</string>
+    <string name="home_peso">Weight</string>
+    <string name="home_lunghezza">Length</string>
+    <string name="home_registra_crescita">+ Log weight/length</string>
+    <string name="home_condividi_scheda">Share profile</string>
+    <string name="home_qr_desc">Animal profile QR code</string>
+    <string name="home_qr_title">Animal profile QR code</string>
+    <string name="home_qr_subtitle">Handy to show a pet-sitter or vet for quick access to %1$s\'s data (code %2$s)</string>
+    <string name="qr_export_header">Gecko Care — %1$s</string>
+    <string name="qr_export_morph">Morph: %1$s</string>
+    <string name="qr_export_eta">Age: %1$s</string>
+    <string name="qr_export_peso">Weight: %1$s</string>
+    <string name="qr_export_piano">Feeding plan: %1$s</string>
+    <string name="home_qr_tap_hint">Tap to enlarge</string>
+    <string name="home_piano_alimentare">Feeding plan by age</string>
+    <string name="home_piano_nessuna_fascia">No age range configured</string>
+    <string name="home_piano_dettaglio_vuoto">No age range configured for this age.</string>
+    <string name="home_attivita_recente">Recent activity</string>
+    <string name="home_attivita_vuota">No activity logged yet.</string>
+    <string name="home_stat_prossimo_pasto">until next meal</string>
+    <string name="home_stat_peso_attuale">current weight</string>
+    <string name="home_stat_dall_ultima_muta">since last shed</string>
+    <string name="home_stat_hotspot_ora">hot spot now</string>
+    <string name="home_env_hotspot">Hot spot</string>
+    <string name="home_env_coldspot">Cold spot</string>
+    <string name="home_env_umidita">Humidity</string>
+    <string name="home_env_notturna">Night</string>
+    <string name="home_registra_ambiente">+ Log environment reading</string>
+    <string name="home_storico_letture">Reading history</string>
+    <string name="home_letture_vuoto">No readings logged yet.</string>
+    <string name="home_prossima_muta">Estimated next shed</string>
+    <string name="home_muta_nessuna">No shed logged yet</string>
+    <string name="home_muta_progresso">%1$d of %2$d typical days</string>
+    <string name="home_muta_in_linea">on track</string>
+    <string name="home_muta_in_ritardo">overdue</string>
+    <string name="home_registra_muta">+ Log shed</string>
+    <string name="home_muta_completa">complete</string>
+    <string name="home_muta_parziale">partial</string>
+    <string name="home_note_comportamentali">Behavior notes</string>
+    <string name="home_note_vuoto">No notes yet.</string>
+    <string name="home_aggiungi_nota">+ Add note</string>
+    <string name="home_promemoria_personalizzati">Custom reminders</string>
+    <string name="home_promemoria_vuoto">No specific reminders for this animal.</string>
+    <string name="home_nuovo_promemoria">+ New reminder</string>
+    <string name="home_oggi">Today</string>
+    <string name="home_giorni_suffix">%dd</string>
+    <string name="activity_pasto">Meal: %1$d %2$s</string>
+    <string name="activity_calcio">calcium</string>
+    <string name="activity_calcio_d3">calcium+D3</string>
+    <string name="activity_peso_registrato">Weight logged: %.1f g</string>
+    <string name="activity_muta_completata">Shed completed</string>
+
+    <!-- Note form -->
+    <string name="nota_title">Add note</string>
+    <string name="nota_section">Behavior or health note</string>
+    <string name="nota_placeholder">E.g. Actively explores in the evening, regular appetite...</string>
+    <string name="nota_salva">Save note</string>
+
+    <!-- Environment form -->
+    <string name="ambiente_title_nuovo">Log environment reading</string>
+    <string name="ambiente_title_modifica">Edit reading</string>
+    <string name="ambiente_hint">Measure with a thermometer/hygrometer and enter the values here: they feed the hot spot, cold spot, humidity and night temperature on the animal\'s profile.</string>
+    <string name="ambiente_hotspot">Hot spot (°C)</string>
+    <string name="ambiente_coldspot">Cold spot (°C)</string>
+    <string name="ambiente_umidita">Humidity (%)</string>
+    <string name="ambiente_notturna">Night temperature (°C)</string>
+    <string name="ambiente_salva_modifiche">Save changes</string>
+    <string name="ambiente_salva">Save reading</string>
+    <string name="ambiente_elimina">Delete reading</string>
+
+    <!-- Shed form -->
+    <string name="muta_title_nuovo">Log shed</string>
+    <string name="muta_title_modifica">Edit shed</string>
+    <string name="muta_esito">Outcome</string>
+    <string name="muta_completa_label">Complete shed</string>
+    <string name="muta_completa_hint">Turn off if partial or with residue</string>
+    <string name="muta_note">Notes</string>
+    <string name="muta_salva_modifiche">Save changes</string>
+    <string name="muta_salva">Save shed</string>
+    <string name="muta_elimina">Delete shed</string>
+
+    <!-- Growth form -->
+    <string name="crescita_title_nuovo">Log weight/length</string>
+    <string name="crescita_title_modifica">Edit measurement</string>
+    <string name="crescita_peso">Weight (g)</string>
+    <string name="crescita_lunghezza">Length (cm)</string>
+    <string name="crescita_salva_modifiche">Save changes</string>
+    <string name="crescita_salva">Save measurement</string>
+    <string name="crescita_elimina">Delete measurement</string>
+
+    <!-- Reminder form -->
+    <string name="promemoria_title_modifica">Edit reminder</string>
+    <string name="promemoria_title_nuovo">New reminder</string>
+    <string name="promemoria_tipo">Type</string>
+    <string name="promemoria_frequenza_label">Frequency (displayed label)</string>
+    <string name="promemoria_frequenza_placeholder">E.g. every day, every 14 days...</string>
+    <string name="promemoria_ripeti">Repeat every (days)</string>
+    <string name="promemoria_giorni_suffix">%d days</string>
+    <string name="promemoria_orario">Time</string>
+    <string name="promemoria_notifica_alle">Notify at</string>
+    <string name="promemoria_attivo">Active</string>
+    <string name="promemoria_attivo_desc">Notifications active for this reminder</string>
+    <string name="promemoria_salva">Save reminder</string>
+    <string name="promemoria_elimina">Delete reminder</string>
+    <string name="promemoria_tipo_pasto">Meal</string>
+    <string name="promemoria_tipo_peso">Weight</string>
+    <string name="promemoria_tipo_pulizia">Enclosure cleaning</string>
+    <string name="promemoria_tipo_integratori">Supplements</string>
+    <string name="promemoria_tipo_integratori_controllo">Supplement check</string>
+    <string name="promemoria_tipo_altro">Other</string>
+    <string name="promemoria_tipo_altro_generico">Reminder</string>
+
+    <!-- Feeding -->
+    <string name="pasti_eyebrow">Feeding · %s</string>
+    <string name="pasti_title">Feeding</string>
+    <string name="pasti_tab_registro">Log</string>
+    <string name="pasti_tab_piano">Plan by age</string>
+    <string name="pasti_settimana">This week</string>
+    <string name="pasti_count">%d meals</string>
+    <string name="pasti_calcio_d3">Calcium+D3 on track</string>
+    <string name="pasti_cronologia">History</string>
+    <string name="pasti_filtro_tutti">All</string>
+    <string name="pasti_filtro_accettati">Accepted</string>
+    <string name="pasti_filtro_rifiutati">Refused</string>
+    <string name="pasti_filtro_con_d3">With calcium+D3</string>
+    <string name="pasti_registro_vuoto">No meals logged with this filter.</string>
+    <string name="pasti_accettato">accepted</string>
+    <string name="pasti_rifiutato">refused</string>
+    <string name="pasti_calcio_d3_chip">● Calcium + D3</string>
+    <string name="pasti_solo_calcio">● Calcium only</string>
+    <string name="pasti_nessun_integratore">○ No supplement</string>
+    <string name="pasti_aggiungi">+ Add meal</string>
+    <string name="pasti_piano_hint">The plan applies automatically based on the animal\'s age, and can be adjusted anytime — handy if the vet recommends a change.</string>
+    <string name="pasti_fasce_eta">Age ranges</string>
+    <string name="pasti_fasce_vuoto">No age range configured.</string>
+    <string name="pasti_range_eta">%1$d–%2$d days</string>
+    <string name="pasti_attuale">CURRENT</string>
+    <string name="pasti_modifica_fascia_desc">Edit range</string>
+    <string name="pasti_nuova_fascia">+ New custom range</string>
+
+    <!-- Add/edit meal -->
+    <string name="pasto_title_nuovo">Add meal</string>
+    <string name="pasto_title_modifica">Edit meal</string>
+    <string name="pasto_preda_n">Feeder %d</string>
+    <string name="pasto_tipo_preda">Feeder type</string>
+    <string name="pasto_rimuovi_preda_desc">Remove feeder</string>
+    <string name="pasto_preda_placeholder">E.g. Crickets, Dubia...</string>
+    <string name="preda_grilli">Crickets</string>
+    <string name="preda_blatte">Roaches</string>
+    <string name="preda_tarme">Mealworms</string>
+    <string name="preda_dubia">Dubia</string>
+    <string name="preda_altro">Other</string>
+    <string name="pasto_quantita">Quantity</string>
+    <string name="pasto_diminuisci_desc">Decrease</string>
+    <string name="pasto_aumenta_desc">Increase</string>
+    <string name="pasto_aggiungi_preda">+ Add another feeder (mixed meal)</string>
+    <string name="pasto_esito">Outcome</string>
+    <string name="pasto_accettato">Accepted</string>
+    <string name="pasto_rifiutato">Refused</string>
+    <string name="pasto_integratori">Supplements</string>
+    <string name="pasto_calcio_on">● Calcium</string>
+    <string name="pasto_calcio_off">○ Calcium</string>
+    <string name="pasto_d3_on">● D3</string>
+    <string name="pasto_d3_off">○ D3</string>
+    <string name="pasto_multivit_on">● Multivitamin</string>
+    <string name="pasto_multivit_off">○ Multivitamin</string>
+    <string name="pasto_note">Notes</string>
+    <string name="pasto_note_placeholder">Optional...</string>
+    <string name="pasto_salva_modifiche">Save changes</string>
+    <string name="pasto_salva">Save meal</string>
+    <string name="pasto_elimina">Delete meal</string>
+
+    <!-- Age range -->
+    <string name="fascia_title_modifica">Edit range</string>
+    <string name="fascia_title_nuova">New range</string>
+    <string name="fascia_nome">Stage name</string>
+    <string name="fascia_nome_placeholder">E.g. Juvenile</string>
+    <string name="fascia_eta">Age (days)</string>
+    <string name="fascia_da">From</string>
+    <string name="fascia_a">To</string>
+    <string name="fascia_frequenza">Frequency</string>
+    <string name="fascia_frequenza_placeholder">E.g. every other day</string>
+    <string name="fascia_note_integratori">Supplement notes</string>
+    <string name="fascia_note_integratori_placeholder">E.g. calcium with D3 on most meals</string>
+    <string name="fascia_ambito">Scope</string>
+    <string name="fascia_solo_animale">Only for this animal</string>
+    <string name="fascia_salva">Save range</string>
+    <string name="fascia_elimina">Delete range</string>
+
+    <!-- Expenses -->
+    <string name="spese_budget">Budget</string>
+    <string name="spese_title">Expenses</string>
+    <string name="spese_tab_animale_default">Animal</string>
+    <string name="spese_tab_allevamento">Whole collection</string>
+    <string name="spese_totale_mese">Total · current month</string>
+    <string name="spese_per_categoria">By category</string>
+    <string name="spese_vuoto_mese">No expenses logged this month.</string>
+    <string name="spese_aggiungi">+ Add expense</string>
+    <string name="spese_totale_allevamento_mese">Collection total · current month</string>
+    <string name="spese_per_animale">By animal</string>
+    <string name="spese_cat_insetti">Feeders</string>
+    <string name="spese_cat_integratori">Supplements</string>
+    <string name="spese_cat_substrato">Substrate/enclosure</string>
+    <string name="spese_cat_veterinario">Vet</string>
+    <string name="spese_cat_altro">Other</string>
+
+    <!-- Add/edit expense -->
+    <string name="spesa_title_nuovo">Add expense</string>
+    <string name="spesa_title_modifica">Edit expense</string>
+    <string name="spesa_categoria">Category</string>
+    <string name="spesa_importo">Amount</string>
+    <string name="spesa_importo_placeholder">E.g. 12.50</string>
+    <string name="spesa_data">Date</string>
+    <string name="spesa_ambito">Scope</string>
+    <string name="spesa_generica_label">Generic collection expense</string>
+    <string name="spesa_generica_hint">E.g. substrate bought in bulk, not tied to a single animal</string>
+    <string name="spesa_note">Notes</string>
+    <string name="spesa_note_placeholder">Optional...</string>
+    <string name="spesa_salva_modifiche">Save changes</string>
+    <string name="spesa_salva">Save expense</string>
+    <string name="spesa_elimina">Delete expense</string>
+
+    <!-- Stats -->
+    <string name="stats_eyebrow">Trends · %s</string>
+    <string name="stats_title">Statistics</string>
+    <string name="stats_peso_tempo">Weight over time</string>
+    <string name="stats_peso_vuoto">You need at least two weight measurements for the chart.</string>
+    <string name="stats_pasti_settimana">Meals per week</string>
+    <string name="stats_pasti_vuoto">No meals logged in the recent weeks.</string>
+    <string name="stats_riepilogo">Summary</string>
+    <string name="stats_intervallo_muta">Average shed interval</string>
+    <string name="stats_crescita_mese">Growth last month</string>
+    <string name="stats_pasti_rifiutati">Refused meals</string>
+    <string name="stats_esporta_animale">Export current animal\'s data (CSV)</string>
+    <string name="stats_esporta_allevamento">Export whole collection (CSV)</string>
+    <string name="stats_esporta_chooser">Export Gecko Care data</string>
+    <string name="stats_giorni_suffix">%d days</string>
+    <string name="stats_rifiutati_su">%1$d of %2$d</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_aspetto">Appearance</string>
+    <string name="settings_tema_sistema">System theme</string>
+    <string name="settings_tema_chiaro">Light</string>
+    <string name="settings_tema_scuro">Dark</string>
+    <string name="settings_lingua">Language</string>
+    <string name="settings_lingua_sistema">System language</string>
+    <string name="settings_lingua_it">Italiano</string>
+    <string name="settings_lingua_en">English</string>
+    <string name="settings_valuta">Currency</string>
+    <string name="settings_valuta_automatica">Automatic (device)</string>
+    <string name="settings_info">Info</string>
+    <string name="settings_info_testo">Gecko Care keeps all your collection\'s data only on this device: no account, no limit on the number of animals you can manage.</string>
+
+    <string name="settings_backup">Automatic backup</string>
+    <string name="settings_backup_cartella_titolo">Backup folder</string>
+    <string name="settings_backup_cartella_non_impostata">No folder selected</string>
+    <string name="settings_backup_scegli_cartella">Choose folder</string>
+    <string name="settings_backup_attivo">Automatic backup</string>
+    <string name="settings_backup_attivo_hint">Saves geckos, meals, notes and photos into a .zip file in the chosen folder</string>
+    <string name="settings_backup_frequenza_giornaliero">Every day</string>
+    <string name="settings_backup_frequenza_settimanale">Every week</string>
+    <string name="settings_backup_ora">Back up now</string>
+    <string name="settings_backup_mai">No backup yet</string>
+    <string name="settings_backup_ultimo_ok">Last backup: %1$s · succeeded</string>
+    <string name="settings_backup_ultimo_errore">Last backup: %1$s · failed</string>
+    <string name="settings_backup_evento_ok">Backup completed</string>
+    <string name="settings_backup_evento_errore">Backup failed</string>
+
+    <string name="settings_restore">Restore data</string>
+    <string name="settings_restore_hint">Replaces all current data (geckos, meals, notes, photos, settings) with the chosen file\'s. The app will restart.</string>
+    <string name="settings_restore_bottone">Restore from file</string>
+    <string name="settings_restore_conferma_titolo">Restore data?</string>
+    <string name="settings_restore_conferma_testo">This overwrites all current data and cannot be undone. The app will restart.</string>
+    <string name="settings_restore_conferma_conferma">Restore</string>
+    <string name="settings_restore_conferma_annulla">Cancel</string>
+    <string name="settings_restore_evento_ok">Restore ready, restarting…</string>
+    <string name="settings_restore_evento_errore">Invalid backup file</string>
+
+    <!-- Reminder notifications -->
+    <string name="notif_canale_nome">Gecko Care reminders</string>
+    <string name="notif_canale_descrizione">Notifications for meals, weight, enclosure cleaning and supplements</string>
+    <string name="notif_promemoria_pasto">Meal reminder</string>
+    <string name="notif_promemoria_peso">Weight reminder</string>
+    <string name="notif_promemoria_pulizia">Enclosure cleaning reminder</string>
+    <string name="notif_promemoria_integratori">Supplement reminder</string>
+    <string name="notif_promemoria_altro">Gecko Care reminder</string>
+    <string name="notif_tutto_allevamento">whole collection</string>
+</resources>

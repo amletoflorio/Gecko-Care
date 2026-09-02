@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gecko Care</string>
+
+    <!-- Età -->
+    <string name="eta_sconosciuta">Età sconosciuta</string>
+    <string name="relative_oggi">OGGI</string>
+    <string name="relative_ieri">IERI</string>
+    <plurals name="giorni_fa">
+        <item quantity="one">%d giorno fa</item>
+        <item quantity="other">%d giorni fa</item>
+    </plurals>
+    <plurals name="age_days">
+        <item quantity="one">%d giorno</item>
+        <item quantity="other">%d giorni</item>
+    </plurals>
+    <plurals name="age_months">
+        <item quantity="one">%d mese</item>
+        <item quantity="other">%d mesi</item>
+    </plurals>
+    <plurals name="age_years">
+        <item quantity="one">%d anno</item>
+        <item quantity="other">%d anni</item>
+    </plurals>
+
+    <!-- Tag suggeriti geco -->
+    <string name="tag_riproduttore">Riproduttore</string>
+    <string name="tag_in_vendita">In vendita</string>
+    <string name="tag_quarantena">Quarantena</string>
+    <string name="tag_cucciolo">Cucciolo</string>
+
+    <!-- Navigazione -->
+    <string name="nav_gechi">Gechi</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_pasti">Pasti</string>
+    <string name="nav_stats">Statistiche</string>
+    <string name="nav_spese">Spese</string>
+
+    <string name="fab_add_pasto">Aggiungi pasto</string>
+    <string name="fab_add_spesa">Aggiungi spesa</string>
+    <string name="fab_add_gecko">Aggiungi geco</string>
+
+    <!-- Tab Gechi -->
+    <string name="gechi_eyebrow">Allevamento</string>
+    <string name="gechi_title">I tuoi gechi</string>
+    <string name="gechi_stat_animali">animali</string>
+    <string name="gechi_stat_pasto_oggi">da pasto oggi</string>
+    <string name="gechi_stat_spese_mese">spese · mese</string>
+    <string name="gechi_filtra_tag">Filtra per tag</string>
+    <string name="gechi_tag_tutti">Tutti</string>
+    <string name="gechi_tutti_animali">Tutti gli animali</string>
+    <string name="gechi_empty_nessuno">Non hai ancora aggiunto nessun geco. Tocca \"+ Aggiungi geco\" per iniziare.</string>
+    <string name="gechi_empty_tag">Nessun animale con questo tag.</string>
+    <string name="gechi_aggiungi_button">+ Aggiungi geco</string>
+    <string name="gechi_impostazioni_desc">Impostazioni</string>
+    <string name="gechi_scan_desc">Scansiona QR geco</string>
+    <string name="gechi_scan_prompt">Inquadra il QR di un geco</string>
+    <string name="gechi_scan_non_riconosciuto">QR non riconosciuto: nessun geco corrisponde a questo codice.</string>
+    <string name="gechi_scan_scheda_importata_titolo">Scheda geco (da un altro dispositivo)</string>
+
+    <!-- Form Gecko -->
+    <string name="gecko_form_title_modifica">Modifica geco</string>
+    <string name="gecko_form_title_nuovo">Nuovo geco</string>
+    <string name="gecko_form_foto_hint">Tocca per scegliere una foto</string>
+    <string name="gecko_form_nome">Nome</string>
+    <string name="gecko_form_nome_placeholder">Es. Sabbia</string>
+    <string name="gecko_form_nome_obbligatorio">Il nome è obbligatorio</string>
+    <string name="gecko_form_morph">Morph</string>
+    <string name="gecko_form_morph_placeholder">Es. Mack Snow</string>
+    <string name="gecko_form_sesso">Sesso</string>
+    <string name="gecko_sesso_sconosciuto">Sconosciuto</string>
+    <string name="gecko_sesso_maschio">Maschio</string>
+    <string name="gecko_sesso_femmina">Femmina</string>
+    <string name="gecko_form_date_title">Data di nascita e/o acquisizione</string>
+    <string name="gecko_form_date_hint">Basta una delle due: se non conosci la data di nascita esatta usa il \"gotcha day\".</string>
+    <string name="gecko_form_nascita">Nascita</string>
+    <string name="gecko_form_gotcha">Gotcha day</string>
+    <string name="gecko_form_data_non_impostata">Non impostata</string>
+    <string name="gecko_form_rimuovi_data">Rimuovi data</string>
+    <string name="gecko_form_colore">Colore identificativo</string>
+    <string name="gecko_form_colore_custom_desc">Colore personalizzato</string>
+    <string name="gecko_form_tag">Tag</string>
+    <string name="gecko_form_tag_placeholder">Nuovo tag personalizzato</string>
+    <string name="gecko_form_tag_aggiungi_desc">Aggiungi tag</string>
+    <string name="gecko_form_descrizione">Descrizione</string>
+    <string name="gecko_form_descrizione_placeholder">Note generali sull\'animale...</string>
+    <string name="gecko_form_salvataggio">Salvataggio…</string>
+    <string name="gecko_form_salva">Salva geco</string>
+
+    <!-- Color picker -->
+    <string name="colorpicker_title">Colore personalizzato</string>
+
+    <!-- Comuni -->
+    <string name="common_annulla">Annulla</string>
+    <string name="common_conferma">Conferma</string>
+    <string name="common_chiudi">Chiudi</string>
+    <string name="common_indietro">Indietro</string>
+
+    <!-- Home -->
+    <string name="home_eyebrow">Scheda animale</string>
+    <string name="home_tab_panoramica">Panoramica</string>
+    <string name="home_tab_cura">Cura &amp; ambiente</string>
+    <string name="home_empty_title">Nessun geco ancora</string>
+    <string name="home_empty_subtitle">Aggiungine uno dalla scheda Gechi per vedere qui la sua pagina.</string>
+    <string name="home_crescita">Crescita</string>
+    <string name="home_modifica_geco_desc">Modifica geco</string>
+    <string name="home_galleria">Galleria foto</string>
+    <string name="home_galleria_vuota">Nessuna foto ancora. Aggiungi la prima per iniziare il diario di crescita.</string>
+    <string name="home_galleria_aggiungi_desc">Aggiungi foto</string>
+    <string name="home_galleria_elimina">Elimina foto</string>
+    <string name="foto_errore_salvataggio">Impossibile salvare la foto: prova con un\'altra immagine.</string>
+    <string name="home_peso">Peso</string>
+    <string name="home_lunghezza">Lunghezza</string>
+    <string name="home_registra_crescita">+ Registra peso/lunghezza</string>
+    <string name="home_condividi_scheda">Condividi scheda</string>
+    <string name="home_qr_desc">QR profilo animale</string>
+    <string name="home_qr_title">QR profilo animale</string>
+    <string name="home_qr_subtitle">Utile da mostrare a pet-sitter o veterinario per accedere subito ai dati di %1$s (codice %2$s)</string>
+    <string name="qr_export_header">Gecko Care — %1$s</string>
+    <string name="qr_export_morph">Morph: %1$s</string>
+    <string name="qr_export_eta">Età: %1$s</string>
+    <string name="qr_export_peso">Peso: %1$s</string>
+    <string name="qr_export_piano">Piano pasti: %1$s</string>
+    <string name="home_qr_tap_hint">Tocca per ingrandire</string>
+    <string name="home_piano_alimentare">Piano alimentare per età</string>
+    <string name="home_piano_nessuna_fascia">Nessuna fascia configurata</string>
+    <string name="home_piano_dettaglio_vuoto">Nessuna fascia d\'età configurata per questa età.</string>
+    <string name="home_attivita_recente">Attività recente</string>
+    <string name="home_attivita_vuota">Nessuna attività registrata ancora.</string>
+    <string name="home_stat_prossimo_pasto">al prossimo pasto</string>
+    <string name="home_stat_peso_attuale">peso attuale</string>
+    <string name="home_stat_dall_ultima_muta">dall\'ultima muta</string>
+    <string name="home_stat_hotspot_ora">hot spot ora</string>
+    <string name="home_env_hotspot">Hot spot</string>
+    <string name="home_env_coldspot">Cold spot</string>
+    <string name="home_env_umidita">Umidità</string>
+    <string name="home_env_notturna">Notturna</string>
+    <string name="home_registra_ambiente">+ Registra lettura ambiente</string>
+    <string name="home_storico_letture">Storico letture</string>
+    <string name="home_letture_vuoto">Nessuna lettura registrata ancora.</string>
+    <string name="home_prossima_muta">Prossima muta stimata</string>
+    <string name="home_muta_nessuna">Nessuna muta registrata ancora</string>
+    <string name="home_muta_progresso">%1$d di %2$d giorni tipici</string>
+    <string name="home_muta_in_linea">in linea</string>
+    <string name="home_muta_in_ritardo">in ritardo</string>
+    <string name="home_registra_muta">+ Registra muta</string>
+    <string name="home_muta_completa">completa</string>
+    <string name="home_muta_parziale">parziale</string>
+    <string name="home_note_comportamentali">Note comportamentali</string>
+    <string name="home_note_vuoto">Nessuna nota ancora.</string>
+    <string name="home_aggiungi_nota">+ Aggiungi nota</string>
+    <string name="home_promemoria_personalizzati">Promemoria personalizzati</string>
+    <string name="home_promemoria_vuoto">Nessun promemoria specifico per questo animale.</string>
+    <string name="home_nuovo_promemoria">+ Nuovo promemoria</string>
+    <string name="home_oggi">Oggi</string>
+    <string name="home_giorni_suffix">%dgg</string>
+    <string name="activity_pasto">Pasto: %1$d %2$s</string>
+    <string name="activity_calcio">calcio</string>
+    <string name="activity_calcio_d3">calcio+D3</string>
+    <string name="activity_peso_registrato">Peso registrato: %.1f g</string>
+    <string name="activity_muta_completata">Muta completata</string>
+
+    <!-- Form nota -->
+    <string name="nota_title">Aggiungi nota</string>
+    <string name="nota_section">Nota comportamentale o di salute</string>
+    <string name="nota_placeholder">Es. Esplora attivamente la sera, appetito regolare...</string>
+    <string name="nota_salva">Salva nota</string>
+
+    <!-- Form ambiente -->
+    <string name="ambiente_title_nuovo">Registra lettura ambiente</string>
+    <string name="ambiente_title_modifica">Modifica lettura</string>
+    <string name="ambiente_hint">Misura con termometro/igrometro del terrario e inserisci qui i valori: alimentano hot spot, cold spot, umidità e temperatura notturna nella scheda dell\'animale.</string>
+    <string name="ambiente_hotspot">Hot spot (°C)</string>
+    <string name="ambiente_coldspot">Cold spot (°C)</string>
+    <string name="ambiente_umidita">Umidità (%)</string>
+    <string name="ambiente_notturna">Temperatura notturna (°C)</string>
+    <string name="ambiente_salva_modifiche">Salva modifiche</string>
+    <string name="ambiente_salva">Salva lettura</string>
+    <string name="ambiente_elimina">Elimina lettura</string>
+
+    <!-- Form muta -->
+    <string name="muta_title_nuovo">Registra muta</string>
+    <string name="muta_title_modifica">Modifica muta</string>
+    <string name="muta_esito">Esito</string>
+    <string name="muta_completa_label">Muta completa</string>
+    <string name="muta_completa_hint">Disattiva se parziale o con residui</string>
+    <string name="muta_note">Note</string>
+    <string name="muta_salva_modifiche">Salva modifiche</string>
+    <string name="muta_salva">Salva muta</string>
+    <string name="muta_elimina">Elimina muta</string>
+
+    <!-- Form crescita -->
+    <string name="crescita_title_nuovo">Registra peso/lunghezza</string>
+    <string name="crescita_title_modifica">Modifica misura</string>
+    <string name="crescita_peso">Peso (g)</string>
+    <string name="crescita_lunghezza">Lunghezza (cm)</string>
+    <string name="crescita_salva_modifiche">Salva modifiche</string>
+    <string name="crescita_salva">Salva misura</string>
+    <string name="crescita_elimina">Elimina misura</string>
+
+    <!-- Form promemoria -->
+    <string name="promemoria_title_modifica">Modifica promemoria</string>
+    <string name="promemoria_title_nuovo">Nuovo promemoria</string>
+    <string name="promemoria_tipo">Tipo</string>
+    <string name="promemoria_frequenza_label">Frequenza (etichetta mostrata)</string>
+    <string name="promemoria_frequenza_placeholder">Es. ogni giorno, ogni 14 giorni...</string>
+    <string name="promemoria_ripeti">Ripeti ogni (giorni)</string>
+    <string name="promemoria_giorni_suffix">%d giorni</string>
+    <string name="promemoria_orario">Orario</string>
+    <string name="promemoria_notifica_alle">Notifica alle</string>
+    <string name="promemoria_attivo">Attivo</string>
+    <string name="promemoria_attivo_desc">Notifiche attive per questo promemoria</string>
+    <string name="promemoria_salva">Salva promemoria</string>
+    <string name="promemoria_elimina">Elimina promemoria</string>
+    <string name="promemoria_tipo_pasto">Pasto</string>
+    <string name="promemoria_tipo_peso">Peso</string>
+    <string name="promemoria_tipo_pulizia">Pulizia terrario</string>
+    <string name="promemoria_tipo_integratori">Integratori</string>
+    <string name="promemoria_tipo_integratori_controllo">Controllo integratori</string>
+    <string name="promemoria_tipo_altro">Altro</string>
+    <string name="promemoria_tipo_altro_generico">Promemoria</string>
+
+    <!-- Pasti -->
+    <string name="pasti_eyebrow">Alimentazione · %s</string>
+    <string name="pasti_title">Pasti</string>
+    <string name="pasti_tab_registro">Registro</string>
+    <string name="pasti_tab_piano">Piano per età</string>
+    <string name="pasti_settimana">Questa settimana</string>
+    <string name="pasti_count">%d pasti</string>
+    <string name="pasti_calcio_d3">Calcio+D3 rispettato</string>
+    <string name="pasti_cronologia">Cronologia</string>
+    <string name="pasti_filtro_tutti">Tutti</string>
+    <string name="pasti_filtro_accettati">Accettati</string>
+    <string name="pasti_filtro_rifiutati">Rifiutati</string>
+    <string name="pasti_filtro_con_d3">Con calcio+D3</string>
+    <string name="pasti_registro_vuoto">Nessun pasto registrato con questo filtro.</string>
+    <string name="pasti_accettato">accettato</string>
+    <string name="pasti_rifiutato">rifiutato</string>
+    <string name="pasti_calcio_d3_chip">● Calcio + D3</string>
+    <string name="pasti_solo_calcio">● Solo calcio</string>
+    <string name="pasti_nessun_integratore">○ Nessun integratore</string>
+    <string name="pasti_aggiungi">+ Aggiungi pasto</string>
+    <string name="pasti_piano_hint">Il piano si applica in automatico in base all\'età dell\'animale, e resta modificabile in qualsiasi momento — utile se il veterinario consiglia una variazione.</string>
+    <string name="pasti_fasce_eta">Fasce d\'età</string>
+    <string name="pasti_fasce_vuoto">Nessuna fascia configurata.</string>
+    <string name="pasti_range_eta">%1$d–%2$d giorni</string>
+    <string name="pasti_attuale">ATTUALE</string>
+    <string name="pasti_modifica_fascia_desc">Modifica fascia</string>
+    <string name="pasti_nuova_fascia">+ Nuova fascia personalizzata</string>
+
+    <!-- Aggiungi/modifica pasto -->
+    <string name="pasto_title_nuovo">Aggiungi pasto</string>
+    <string name="pasto_title_modifica">Modifica pasto</string>
+    <string name="pasto_preda_n">Preda %d</string>
+    <string name="pasto_tipo_preda">Tipo di preda</string>
+    <string name="pasto_rimuovi_preda_desc">Rimuovi preda</string>
+    <string name="pasto_preda_placeholder">Es. Grilli, Dubia...</string>
+    <string name="preda_grilli">Grilli</string>
+    <string name="preda_blatte">Blatte</string>
+    <string name="preda_tarme">Tarme della farina</string>
+    <string name="preda_dubia">Dubia</string>
+    <string name="preda_altro">Altro</string>
+    <string name="pasto_quantita">Quantità</string>
+    <string name="pasto_diminuisci_desc">Diminuisci</string>
+    <string name="pasto_aumenta_desc">Aumenta</string>
+    <string name="pasto_aggiungi_preda">+ Aggiungi un\'altra preda (pasto misto)</string>
+    <string name="pasto_esito">Esito</string>
+    <string name="pasto_accettato">Accettato</string>
+    <string name="pasto_rifiutato">Rifiutato</string>
+    <string name="pasto_integratori">Integratori</string>
+    <string name="pasto_calcio_on">● Calcio</string>
+    <string name="pasto_calcio_off">○ Calcio</string>
+    <string name="pasto_d3_on">● D3</string>
+    <string name="pasto_d3_off">○ D3</string>
+    <string name="pasto_multivit_on">● Multivitaminico</string>
+    <string name="pasto_multivit_off">○ Multivitaminico</string>
+    <string name="pasto_note">Note</string>
+    <string name="pasto_note_placeholder">Facoltative...</string>
+    <string name="pasto_salva_modifiche">Salva modifiche</string>
+    <string name="pasto_salva">Salva pasto</string>
+    <string name="pasto_elimina">Elimina pasto</string>
+
+    <!-- Fascia età -->
+    <string name="fascia_title_modifica">Modifica fascia</string>
+    <string name="fascia_title_nuova">Nuova fascia</string>
+    <string name="fascia_nome">Nome fase</string>
+    <string name="fascia_nome_placeholder">Es. Giovanile</string>
+    <string name="fascia_eta">Età (giorni)</string>
+    <string name="fascia_da">Da</string>
+    <string name="fascia_a">A</string>
+    <string name="fascia_frequenza">Frequenza</string>
+    <string name="fascia_frequenza_placeholder">Es. a giorni alterni</string>
+    <string name="fascia_note_integratori">Note integratori</string>
+    <string name="fascia_note_integratori_placeholder">Es. calcio con D3 alla maggior parte dei pasti</string>
+    <string name="fascia_ambito">Ambito</string>
+    <string name="fascia_solo_animale">Solo per questo animale</string>
+    <string name="fascia_salva">Salva fascia</string>
+    <string name="fascia_elimina">Elimina fascia</string>
+
+    <!-- Spese -->
+    <string name="spese_budget">Budget</string>
+    <string name="spese_title">Spese</string>
+    <string name="spese_tab_animale_default">Animale</string>
+    <string name="spese_tab_allevamento">Tutto l\'allevamento</string>
+    <string name="spese_totale_mese">Totale · mese corrente</string>
+    <string name="spese_per_categoria">Per categoria</string>
+    <string name="spese_vuoto_mese">Nessuna spesa registrata questo mese.</string>
+    <string name="spese_aggiungi">+ Aggiungi spesa</string>
+    <string name="spese_totale_allevamento_mese">Totale allevamento · mese corrente</string>
+    <string name="spese_per_animale">Per animale</string>
+    <string name="spese_cat_insetti">Insetti</string>
+    <string name="spese_cat_integratori">Integratori</string>
+    <string name="spese_cat_substrato">Substrato/terrario</string>
+    <string name="spese_cat_veterinario">Veterinario</string>
+    <string name="spese_cat_altro">Altro</string>
+
+    <!-- Aggiungi/modifica spesa -->
+    <string name="spesa_title_nuovo">Aggiungi spesa</string>
+    <string name="spesa_title_modifica">Modifica spesa</string>
+    <string name="spesa_categoria">Categoria</string>
+    <string name="spesa_importo">Importo</string>
+    <string name="spesa_importo_placeholder">Es. 12.50</string>
+    <string name="spesa_data">Data</string>
+    <string name="spesa_ambito">Ambito</string>
+    <string name="spesa_generica_label">Spesa generica allevamento</string>
+    <string name="spesa_generica_hint">Es. substrato comprato in blocco, non legato a un solo animale</string>
+    <string name="spesa_note">Note</string>
+    <string name="spesa_note_placeholder">Facoltative...</string>
+    <string name="spesa_salva_modifiche">Salva modifiche</string>
+    <string name="spesa_salva">Salva spesa</string>
+    <string name="spesa_elimina">Elimina spesa</string>
+
+    <!-- Statistiche -->
+    <string name="stats_eyebrow">Andamento · %s</string>
+    <string name="stats_title">Statistiche</string>
+    <string name="stats_peso_tempo">Peso nel tempo</string>
+    <string name="stats_peso_vuoto">Servono almeno due misurazioni di peso per il grafico.</string>
+    <string name="stats_pasti_settimana">Pasti per settimana</string>
+    <string name="stats_pasti_vuoto">Nessun pasto registrato nelle ultime settimane.</string>
+    <string name="stats_riepilogo">Riepilogo</string>
+    <string name="stats_intervallo_muta">Intervallo medio muta</string>
+    <string name="stats_crescita_mese">Crescita ultimo mese</string>
+    <string name="stats_pasti_rifiutati">Pasti rifiutati</string>
+    <string name="stats_esporta_animale">Esporta dati animale corrente (CSV)</string>
+    <string name="stats_esporta_allevamento">Esporta tutto l\'allevamento (CSV)</string>
+    <string name="stats_esporta_chooser">Esporta dati Gecko Care</string>
+    <string name="stats_giorni_suffix">%d giorni</string>
+    <string name="stats_rifiutati_su">%1$d su %2$d</string>
+
+    <!-- Impostazioni -->
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_aspetto">Aspetto</string>
+    <string name="settings_tema_sistema">Tema di sistema</string>
+    <string name="settings_tema_chiaro">Chiaro</string>
+    <string name="settings_tema_scuro">Scuro</string>
+    <string name="settings_lingua">Lingua</string>
+    <string name="settings_lingua_sistema">Lingua di sistema</string>
+    <string name="settings_lingua_it">Italiano</string>
+    <string name="settings_lingua_en">English</string>
+    <string name="settings_valuta">Valuta</string>
+    <string name="settings_valuta_automatica">Automatica (dispositivo)</string>
+    <string name="settings_info">Info</string>
+    <string name="settings_info_testo">Gecko Care tiene tutti i dati del tuo allevamento solo su questo dispositivo: nessun account, nessun limite al numero di animali gestibili.</string>
+
+    <string name="settings_backup">Backup automatico</string>
+    <string name="settings_backup_cartella_titolo">Cartella di backup</string>
+    <string name="settings_backup_cartella_non_impostata">Nessuna cartella selezionata</string>
+    <string name="settings_backup_scegli_cartella">Scegli cartella</string>
+    <string name="settings_backup_attivo">Backup automatico</string>
+    <string name="settings_backup_attivo_hint">Salva gechi, pasti, note e foto in un file .zip nella cartella scelta</string>
+    <string name="settings_backup_frequenza_giornaliero">Ogni giorno</string>
+    <string name="settings_backup_frequenza_settimanale">Ogni settimana</string>
+    <string name="settings_backup_ora">Esegui backup ora</string>
+    <string name="settings_backup_mai">Nessun backup eseguito</string>
+    <string name="settings_backup_ultimo_ok">Ultimo backup: %1$s · riuscito</string>
+    <string name="settings_backup_ultimo_errore">Ultimo backup: %1$s · non riuscito</string>
+    <string name="settings_backup_evento_ok">Backup completato</string>
+    <string name="settings_backup_evento_errore">Backup non riuscito</string>
+
+    <string name="settings_restore">Ripristina dati</string>
+    <string name="settings_restore_hint">Sostituisce tutti i dati attuali (gechi, pasti, note, foto, impostazioni) con quelli del file scelto. L\'app si riavvierà.</string>
+    <string name="settings_restore_bottone">Ripristina da file</string>
+    <string name="settings_restore_conferma_titolo">Ripristinare i dati?</string>
+    <string name="settings_restore_conferma_testo">Questa operazione sovrascrive tutti i dati attuali e non può essere annullata. L\'app si riavvierà.</string>
+    <string name="settings_restore_conferma_conferma">Ripristina</string>
+    <string name="settings_restore_conferma_annulla">Annulla</string>
+    <string name="settings_restore_evento_ok">Ripristino pronto, riavvio in corso…</string>
+    <string name="settings_restore_evento_errore">File di backup non valido</string>
+
+    <!-- Notifiche promemoria -->
+    <string name="notif_canale_nome">Promemoria Gecko Care</string>
+    <string name="notif_canale_descrizione">Notifiche per pasti, peso, pulizia terrario e integratori</string>
+    <string name="notif_promemoria_pasto">Promemoria pasto</string>
+    <string name="notif_promemoria_peso">Promemoria peso</string>
+    <string name="notif_promemoria_pulizia">Promemoria pulizia terrario</string>
+    <string name="notif_promemoria_integratori">Promemoria integratori</string>
+    <string name="notif_promemoria_altro">Promemoria Gecko Care</string>
+    <string name="notif_tutto_allevamento">tutto l\'allevamento</string>
+</resources>
