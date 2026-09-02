@@ -114,19 +114,6 @@ No network, contacts, or location permissions: all data stays on the device. Bac
 
 ---
 
-## Installation
-
-There is no public Releases page yet. To try the app, build it from source (see below) or install the debug APK included in the repository:
-
-1. Enable **Install from unknown sources** in Android Settings → Security.
-2. Install `terra-debug.apk` from the repository root.
-3. Open the app and grant the notification permission when prompted.
-4. Add your first gecko from the "Geckos" tab.
-
-> Note: the included APK is a development build and may not reflect the latest features — build from source for the up-to-date version.
-
----
-
 ## Building from source
 
 ```bash
