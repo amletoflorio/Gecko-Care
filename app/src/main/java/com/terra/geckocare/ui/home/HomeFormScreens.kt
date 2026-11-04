@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,10 +30,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,15 +44,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.terra.geckocare.R
 import com.terra.geckocare.di.terraViewModel
 import com.terra.geckocare.data.local.entity.TipoReminder
 import com.terra.geckocare.ui.common.ChipVariant
+import com.terra.geckocare.ui.common.DataOraField
 import com.terra.geckocare.ui.common.PrimaryButton
 import com.terra.geckocare.ui.common.SectionTitle
 import com.terra.geckocare.ui.common.TerraCard
 import com.terra.geckocare.ui.common.TerraChip
+import com.terra.geckocare.ui.common.TimePickerDialogSimple
 import com.terra.geckocare.ui.navigation.GeckoSelectionViewModel
 import com.terra.geckocare.ui.theme.LocalTerraColors
 
@@ -150,6 +150,7 @@ fun AmbienteFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
@@ -258,6 +259,7 @@ fun CrescitaFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
@@ -337,9 +339,13 @@ fun MutaFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
+            SectionTitle(stringResource(R.string.common_data_ora))
+            DataOraField(dataOra = state.dataOra, onChange = viewModel::onDataOraChange)
+
             SectionTitle(stringResource(R.string.muta_esito))
             TerraCard {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -422,6 +428,7 @@ fun PromemoriaFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
@@ -504,25 +511,6 @@ fun PromemoriaFormScreen(
             onDismiss = { mostraOrario = false },
             onConfirm = { viewModel.onOrarioChange(it); mostraOrario = false },
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimePickerDialogSimple(orarioMinutiIniziale: Int, onDismiss: () -> Unit, onConfirm: (Int) -> Unit) {
-    val state = rememberTimePickerState(
-        initialHour = orarioMinutiIniziale / 60,
-        initialMinute = orarioMinutiIniziale % 60,
-        is24Hour = true,
-    )
-    Dialog(onDismissRequest = onDismiss) {
-        TerraCard {
-            TimePicker(state = state)
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_annulla)) }
-                TextButton(onClick = { onConfirm(state.hour * 60 + state.minute) }) { Text(stringResource(R.string.common_conferma)) }
-            }
-        }
     }
 }
 

@@ -65,6 +65,7 @@ import com.terra.geckocare.ui.navigation.TopLevelRoutes
 import com.terra.geckocare.ui.navigation.bottomNavItems
 import com.terra.geckocare.ui.pasti.AggiungiPastoScreen
 import com.terra.geckocare.ui.pasti.FasciaEtaFormScreen
+import com.terra.geckocare.ui.pasti.FeciFormScreen
 import com.terra.geckocare.ui.pasti.PastiScreen
 import com.terra.geckocare.ui.settings.ImpostazioniScreen
 import com.terra.geckocare.ui.spese.AggiungiSpesaScreen
@@ -220,6 +221,8 @@ fun TerraApp() {
                     onModificaPasto = { id -> navController.navigate(DetailRoutes.modificaPasto(id)) },
                     onModificaFasciaEta = { id -> navController.navigate(DetailRoutes.modificaFasciaEta(id)) },
                     onNuovaFasciaEta = { navController.navigate(DetailRoutes.NUOVA_FASCIA_ETA) },
+                    onAggiungiFeci = { navController.navigate(DetailRoutes.AGGIUNGI_FECI) },
+                    onModificaFeci = { id -> navController.navigate(DetailRoutes.modificaFeci(id)) },
                 )
             }
             composable(TopLevelRoutes.STATS) {
@@ -229,6 +232,7 @@ fun TerraApp() {
                 SpeseScreen(
                     selectionViewModel = selectionViewModel,
                     onAggiungiSpesa = { navController.navigate(DetailRoutes.AGGIUNGI_SPESA) },
+                    onAggiungiSpesaGenerica = { navController.navigate(DetailRoutes.AGGIUNGI_SPESA_GENERICA) },
                     onModificaSpesa = { id -> navController.navigate(DetailRoutes.modificaSpesa(id)) },
                 )
             }
@@ -256,6 +260,18 @@ fun TerraApp() {
                     feedingId = feedingId,
                 )
             }
+            composable(DetailRoutes.AGGIUNGI_FECI) {
+                FeciFormScreen(selectionViewModel, onDone = { navController.popBackStack() }, onClose = { navController.popBackStack() })
+            }
+            composable(DetailRoutes.MODIFICA_FECI) { entry ->
+                val logId = entry.arguments?.let { navBackStackEntryLongArg(it, "defecationLogId") }
+                FeciFormScreen(
+                    selectionViewModel,
+                    onDone = { navController.popBackStack() },
+                    onClose = { navController.popBackStack() },
+                    logId = logId,
+                )
+            }
             composable(DetailRoutes.NUOVA_FASCIA_ETA) {
                 FasciaEtaFormScreen(
                     ruleId = null,
@@ -275,6 +291,9 @@ fun TerraApp() {
             }
             composable(DetailRoutes.AGGIUNGI_SPESA) {
                 AggiungiSpesaScreen(selectionViewModel, onDone = { navController.popBackStack() }, onClose = { navController.popBackStack() })
+            }
+            composable(DetailRoutes.AGGIUNGI_SPESA_GENERICA) {
+                AggiungiSpesaScreen(selectionViewModel, onDone = { navController.popBackStack() }, onClose = { navController.popBackStack() }, generica = true)
             }
             composable(DetailRoutes.MODIFICA_SPESA) { entry ->
                 val expenseId = entry.arguments?.let { navBackStackEntryLongArg(it, "expenseId") }

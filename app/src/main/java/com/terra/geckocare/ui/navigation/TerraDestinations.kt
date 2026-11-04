@@ -25,7 +25,10 @@ object DetailRoutes {
     const val MODIFICA_PASTO = "pasti/modifica/{feedingId}"
     const val MODIFICA_FASCIA_ETA = "pasti/fascia/{ruleId}"
     const val NUOVA_FASCIA_ETA = "pasti/fascia/nuova"
+    const val AGGIUNGI_FECI = "pasti/feci/aggiungi"
+    const val MODIFICA_FECI = "pasti/feci/{defecationLogId}"
     const val AGGIUNGI_SPESA = "spese/aggiungi"
+    const val AGGIUNGI_SPESA_GENERICA = "spese/aggiungi-generica"
     const val MODIFICA_SPESA = "spese/modifica/{expenseId}"
     const val AGGIUNGI_NOTA = "home/nota/aggiungi"
     const val AGGIUNGI_AMBIENTE = "home/ambiente/aggiungi"
@@ -45,6 +48,7 @@ object DetailRoutes {
     fun modificaMuta(shedLogId: Long) = "home/muta/$shedLogId"
     fun modificaCrescita(growthLogId: Long) = "home/crescita/$growthLogId"
     fun modificaFasciaEta(ruleId: Long) = "pasti/fascia/$ruleId"
+    fun modificaFeci(defecationLogId: Long) = "pasti/feci/$defecationLogId"
     fun modificaPromemoria(reminderId: Long) = "home/promemoria/$reminderId"
 }
 

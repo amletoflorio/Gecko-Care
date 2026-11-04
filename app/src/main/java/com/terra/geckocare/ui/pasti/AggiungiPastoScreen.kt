@@ -1,16 +1,20 @@
-@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class, androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 
 package com.terra.geckocare.ui.pasti
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -36,12 +40,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.terra.geckocare.R
 import com.terra.geckocare.di.terraViewModel
 import com.terra.geckocare.data.local.entity.EsitoPasto
 import com.terra.geckocare.ui.common.ChipVariant
+import com.terra.geckocare.ui.common.DataOraField
 import com.terra.geckocare.ui.common.GhostButton
 import com.terra.geckocare.ui.common.PrimaryButton
 import com.terra.geckocare.ui.common.SectionTitle
@@ -65,6 +71,10 @@ fun AggiungiPastoScreen(
     val modalitaModifica = feedingId != null
 
     LaunchedEffect(feedingId) { feedingId?.let(viewModel::caricaPerModifica) }
+    LaunchedEffect(feedingId, geckoId) {
+        val id = geckoId
+        if (feedingId == null && id != null) viewModel.precompilaDaPiano(id)
+    }
     LaunchedEffect(state.salvataggioCompletato, state.eliminato) {
         if (state.salvataggioCompletato || state.eliminato) onDone()
     }
@@ -87,9 +97,13 @@ fun AggiungiPastoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
+            SectionTitle(stringResource(R.string.common_data_ora))
+            DataOraField(dataOra = state.dataOra, onChange = viewModel::onDataOraChange)
+
             val prede = tipiPredaSuggeriti()
             state.prede.forEachIndexed { index, riga ->
                 if (index > 0) Spacer(Modifier.height(14.dp))
@@ -147,6 +161,27 @@ fun AggiungiPastoScreen(
             )
 
             SectionTitle(stringResource(R.string.pasto_integratori))
+            state.previstoDalPiano?.let { p ->
+                if (p.insetti.isNotEmpty()) {
+                    Text(
+                        stringResource(R.string.pasto_insetti_previsti_piano, p.insetti.joinToString(", ")),
+                        color = colors.inkDim,
+                        fontSize = 12.5.sp,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                    )
+                }
+                Text(
+                    stringResource(
+                        R.string.pasto_previsto_piano,
+                        p.numeroPasto,
+                        p.lunghezzaCiclo,
+                        integratoriLabel(p.conCalcio, p.conD3, p.conMultivitaminico) ?: stringResource(R.string.piano_nessuno),
+                    ),
+                    color = colors.inkDim,
+                    fontSize = 12.5.sp,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TerraChip(
                     text = if (state.conCalcio) stringResource(R.string.pasto_calcio_on) else stringResource(R.string.pasto_calcio_off),
@@ -228,6 +263,7 @@ fun FasciaEtaFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
@@ -244,19 +280,22 @@ fun FasciaEtaFormScreen(
             SectionTitle(stringResource(R.string.fascia_eta))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
-                    value = state.etaMinGiorni,
+                    value = state.etaMinMesi,
                     onValueChange = viewModel::onEtaMinChange,
                     modifier = Modifier.weight(1f),
                     label = { Text(stringResource(R.string.fascia_da)) },
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colors.teal, unfocusedBorderColor = colors.line),
                 )
                 OutlinedTextField(
-                    value = state.etaMaxGiorni,
+                    value = state.etaMaxMesi,
                     onValueChange = viewModel::onEtaMaxChange,
                     modifier = Modifier.weight(1f),
                     label = { Text(stringResource(R.string.fascia_a)) },
+                    placeholder = { Text(stringResource(R.string.fascia_a_senza_limite)) },
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colors.teal, unfocusedBorderColor = colors.line),
                 )
             }
@@ -270,6 +309,67 @@ fun FasciaEtaFormScreen(
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colors.teal, unfocusedBorderColor = colors.line),
             )
+
+            SectionTitle(stringResource(R.string.fascia_schema))
+            Text(stringResource(R.string.fascia_schema_hint), color = colors.inkFaint, fontSize = 11.5.sp, modifier = Modifier.padding(bottom = 8.dp))
+            if (state.schema.isEmpty()) {
+                TerraCard {
+                    Text(stringResource(R.string.fascia_schema_vuoto), color = colors.inkFaint, fontSize = 12.5.sp, modifier = Modifier.padding(vertical = 8.dp))
+                }
+            }
+            val prede = tipiPredaSuggeriti(includiAltro = false)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                state.schema.forEachIndexed { index, riga ->
+                    TerraCard {
+                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(stringResource(R.string.fascia_schema_pasto_n, index + 1), color = colors.teal, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                            IconButton(onClick = { viewModel.rimuoviRigaSchema(index) }, modifier = Modifier.size(28.dp)) {
+                                Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.fascia_schema_rimuovi_desc), tint = colors.inkFaint, modifier = Modifier.size(16.dp))
+                            }
+                        }
+                        Text(stringResource(R.string.piano_col_insetti), color = colors.inkFaint, fontSize = 11.sp, modifier = Modifier.padding(top = 6.dp, bottom = 6.dp))
+                        val selezionati = riga.listaInsetti()
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            (prede + selezionati.filter { s -> prede.none { it.equals(s, ignoreCase = true) } }).forEach { tipo ->
+                                val attivo = selezionati.any { it.equals(tipo, ignoreCase = true) }
+                                TerraChip(
+                                    text = (if (attivo) "● " else "○ ") + tipo,
+                                    variant = if (attivo) ChipVariant.TEAL else ChipVariant.NEUTRAL,
+                                    onClick = { viewModel.aggiornaRigaSchema(index, riga.toggleInsetto(tipo)) },
+                                )
+                            }
+                        }
+                        OutlinedTextField(
+                            value = riga.insetti,
+                            onValueChange = { viewModel.aggiornaRigaSchema(index, riga.copy(insetti = it)) },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            placeholder = { Text(stringResource(R.string.fascia_insetti_placeholder)) },
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colors.teal, unfocusedBorderColor = colors.line),
+                        )
+                        Text(stringResource(R.string.piano_col_integratori), color = colors.inkFaint, fontSize = 11.sp, modifier = Modifier.padding(top = 10.dp, bottom = 6.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            TerraChip(
+                                text = (if (riga.conCalcio) "● " else "○ ") + stringResource(R.string.integratore_calcio),
+                                variant = if (riga.conCalcio) ChipVariant.CLAY else ChipVariant.NEUTRAL,
+                                onClick = { viewModel.aggiornaRigaSchema(index, riga.copy(conCalcio = !riga.conCalcio)) },
+                            )
+                            TerraChip(
+                                text = (if (riga.conD3) "● " else "○ ") + stringResource(R.string.integratore_d3),
+                                variant = if (riga.conD3) ChipVariant.SAGE else ChipVariant.NEUTRAL,
+                                onClick = { viewModel.aggiornaRigaSchema(index, riga.copy(conD3 = !riga.conD3)) },
+                            )
+                            TerraChip(
+                                text = (if (riga.conMultivitaminico) "● " else "○ ") + stringResource(R.string.integratore_multivit),
+                                variant = if (riga.conMultivitaminico) ChipVariant.TEAL else ChipVariant.NEUTRAL,
+                                onClick = { viewModel.aggiornaRigaSchema(index, riga.copy(conMultivitaminico = !riga.conMultivitaminico)) },
+                            )
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            GhostButton(text = stringResource(R.string.fascia_schema_aggiungi), onClick = viewModel::aggiungiRigaSchema)
 
             SectionTitle(stringResource(R.string.fascia_note_integratori))
             OutlinedTextField(
@@ -311,10 +411,10 @@ fun FasciaEtaFormScreen(
 }
 
 @Composable
-private fun tipiPredaSuggeriti(): List<String> = listOf(
+internal fun tipiPredaSuggeriti(includiAltro: Boolean = true): List<String> = listOfNotNull(
     stringResource(R.string.preda_grilli),
     stringResource(R.string.preda_blatte),
     stringResource(R.string.preda_tarme),
     stringResource(R.string.preda_dubia),
-    stringResource(R.string.preda_altro),
+    if (includiAltro) stringResource(R.string.preda_altro) else null,
 )

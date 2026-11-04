@@ -12,6 +12,14 @@ class ExpenseRepository(
 
     suspend fun getById(id: Long): Expense? = expenseDao.getById(id)
 
+    /** Tutte le voci dell'acquisto a cui appartiene [expense] (solo lei se non raggruppata). */
+    suspend fun vociDelloStessoAcquisto(expense: Expense): List<Expense> =
+        expense.gruppo?.let { expenseDao.getByGruppo(it) }?.ifEmpty { null } ?: listOf(expense)
+
+    suspend fun sostituisciVoci(idPrecedenti: List<Long>, nuove: List<Expense>) = expenseDao.sostituisciVoci(idPrecedenti, nuove)
+
+    suspend fun deleteByIds(ids: List<Long>) = expenseDao.deleteByIds(ids)
+
     fun expensesAll(): Flow<List<Expense>> = expenseDao.expensesAll()
 
     fun expensesInRange(start: LocalDate, end: LocalDate): Flow<List<Expense>> =

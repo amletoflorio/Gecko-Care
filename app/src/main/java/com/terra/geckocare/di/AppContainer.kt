@@ -5,9 +5,15 @@ import androidx.room.Room
 import androidx.work.WorkManager
 import com.terra.geckocare.data.backup.BackupManager
 import com.terra.geckocare.data.local.DefaultDataCallback
+import com.terra.geckocare.data.local.MIGRATION_2_3
+import com.terra.geckocare.data.local.MIGRATION_3_4
+import com.terra.geckocare.data.local.MIGRATION_4_5
+import com.terra.geckocare.data.local.MIGRATION_5_6
+import com.terra.geckocare.data.local.MIGRATION_6_7
 import com.terra.geckocare.data.local.TerraDatabase
 import com.terra.geckocare.data.photo.PhotoStorageManager
 import com.terra.geckocare.data.repository.CareNoteRepository
+import com.terra.geckocare.data.repository.DefecationRepository
 import com.terra.geckocare.data.repository.EnvironmentRepository
 import com.terra.geckocare.data.repository.ExpenseRepository
 import com.terra.geckocare.data.repository.FeedingPlanRepository
@@ -32,6 +38,7 @@ class AppContainer(context: Context) {
 
     val database: TerraDatabase = Room.databaseBuilder(appContext, TerraDatabase::class.java, TerraDatabase.DATABASE_NAME)
         .addCallback(DefaultDataCallback())
+        .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
         .fallbackToDestructiveMigration()
         .build()
 
@@ -41,9 +48,10 @@ class AppContainer(context: Context) {
     val shedRepository = ShedRepository(database.shedLogDao())
     val careNoteRepository = CareNoteRepository(database.careNoteDao())
     val expenseRepository = ExpenseRepository(database.expenseDao())
-    val feedingPlanRepository = FeedingPlanRepository(database.feedingPlanRuleDao())
+    val feedingPlanRepository = FeedingPlanRepository(database.feedingPlanRuleDao(), database.feedingPlanStepDao())
     val reminderRepository = ReminderRepository(database.reminderDao())
     val environmentRepository = EnvironmentRepository(database.environmentLogDao())
+    val defecationRepository = DefecationRepository(database.defecationLogDao())
 
     val settingsRepository = SettingsRepository(appContext)
     val photoStorageManager = PhotoStorageManager(appContext)

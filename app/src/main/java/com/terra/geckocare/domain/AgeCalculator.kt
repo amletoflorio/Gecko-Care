@@ -16,6 +16,12 @@ fun Gecko.etaInGiorni(oggi: LocalDate = LocalDate.now()): Long? {
     return ChronoUnit.DAYS.between(riferimento, oggi).coerceAtLeast(0)
 }
 
+/** Età in mesi compiuti (stessa data di riferimento di [etaInGiorni]): unità usata dal piano alimentare. */
+fun Gecko.etaInMesi(oggi: LocalDate = LocalDate.now()): Long? {
+    val riferimento = dataNascita ?: dataAcquisizione ?: return null
+    return ChronoUnit.MONTHS.between(riferimento, oggi).coerceAtLeast(0)
+}
+
 /** Etichetta leggibile ("62 giorni", "7 mesi", "2 anni 1 mese") nella lingua corrente. */
 fun Gecko.etaLabel(context: Context, oggi: LocalDate = LocalDate.now()): String? =
     etaInGiorni(oggi)?.let { formatEtaGiorni(context, it) }

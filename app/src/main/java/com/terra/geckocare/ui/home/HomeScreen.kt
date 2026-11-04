@@ -183,6 +183,8 @@ fun HomeScreen(
                 onAggiungiFoto = { uri -> selectedId?.let { galleryViewModel.aggiungiFoto(it, uri) } },
                 onEliminaFoto = galleryViewModel::eliminaFoto,
                 onModificaGecko = onModificaGecko,
+                idSelezionabili = gechi.map { it.id }.toSet(),
+                onApriGecko = selectionViewModel::select,
             )
         } else {
             CuraAmbienteContent(
@@ -209,6 +211,8 @@ private fun PanoramicaContent(
     onAggiungiFoto: (Uri) -> Unit,
     onEliminaFoto: (GeckoPhoto) -> Unit,
     onModificaGecko: (Long) -> Unit,
+    idSelezionabili: Set<Long>,
+    onApriGecko: (Long) -> Unit,
 ) {
     val colors = LocalTerraColors.current
     val context = LocalContext.current
@@ -273,6 +277,17 @@ private fun PanoramicaContent(
             HStat(state.hotSpotOraLabel, stringResource(R.string.home_stat_hotspot_ora), Modifier.weight(1f))
         }
     }
+
+    SectionTitle(stringResource(R.string.home_genetica))
+    GeneticaCard(
+        morph = gecko.morph,
+        padre = state.padre,
+        madre = state.madre,
+        figli = state.figli,
+        idSelezionabili = idSelezionabili,
+        onApriGecko = onApriGecko,
+        onModifica = { onModificaGecko(gecko.id) },
+    )
 
     SectionTitle(stringResource(R.string.home_crescita))
     TerraCard {
@@ -445,6 +460,15 @@ private fun PanoramicaContent(
         Column {
             Text(state.pianoNomeFase ?: stringResource(R.string.home_piano_nessuna_fascia), color = colors.ink, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
             Text(state.pianoDettaglio, color = colors.inkDim, fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
+            state.pianoProssimiIntegratori?.let { p ->
+                Text(
+                    stringResource(R.string.home_piano_prossimo, p.numeroPasto, p.lunghezzaCiclo),
+                    color = colors.inkFaint,
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp),
+                )
+                com.terra.geckocare.ui.pasti.PastoPrevistoChips(p)
+            }
         }
     }
 
@@ -491,6 +515,153 @@ private fun PanoramicaContent(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GeneticaCard(
+    morph: String,
+    padre: GenitoreUi?,
+    madre: GenitoreUi?,
+    figli: List<com.terra.geckocare.data.local.entity.Gecko>,
+    idSelezionabili: Set<Long>,
+    onApriGecko: (Long) -> Unit,
+    onModifica: () -> Unit,
+) {
+    val colors = LocalTerraColors.current
+    TerraCard {
+        Column {
+            GeneticaRiga(stringResource(R.string.gecko_form_morph), morph.ifBlank { "—" })
+            Box(Modifier.fillMaxWidth().height(1.dp).background(colors.line))
+            GenitoreRiga(stringResource(R.string.gecko_padre), padre, idSelezionabili, onApriGecko, onModifica)
+            Box(Modifier.fillMaxWidth().height(1.dp).background(colors.line))
+            GenitoreRiga(stringResource(R.string.gecko_madre), madre, idSelezionabili, onApriGecko, onModifica)
+            if (figli.isNotEmpty()) {
+                Box(Modifier.fillMaxWidth().height(1.dp).background(colors.line))
+                Text(
+                    stringResource(R.string.home_figli, figli.size),
+                    color = colors.inkFaint,
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp),
+                )
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(7.dp), modifier = Modifier.padding(bottom = 4.dp)) {
+                    items(figli) { f ->
+                        TerraChip(
+                            text = f.nome,
+                            variant = if (f.id in idSelezionabili) ChipVariant.TEAL else ChipVariant.NEUTRAL,
+                            onClick = if (f.id in idSelezionabili) ({ onApriGecko(f.id) }) else null,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GeneticaRiga(
+    etichetta: String,
+    valore: String,
+    dettaglio: String = "",
+    modifier: Modifier = Modifier,
+    coloreValore: Color? = null,
+    miniatura: (@Composable () -> Unit)? = null,
+) {
+    val colors = LocalTerraColors.current
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(etichetta, color = colors.inkDim, fontSize = 13.sp)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(start = 12.dp)) {
+            Column(horizontalAlignment = Alignment.End) {
+                Text(valore, color = coloreValore ?: colors.ink, fontSize = 13.5.sp, fontWeight = FontWeight.Medium)
+                if (dettaglio.isNotBlank()) Text(dettaglio, color = colors.inkFaint, fontSize = 11.sp)
+            }
+            miniatura?.invoke()
+        }
+    }
+}
+
+@Composable
+private fun GenitoreRiga(
+    etichetta: String,
+    genitore: GenitoreUi?,
+    idSelezionabili: Set<Long>,
+    onApriGecko: (Long) -> Unit,
+    onModifica: () -> Unit,
+) {
+    val colors = LocalTerraColors.current
+    val apribile = genitore?.geckoId?.takeIf { it in idSelezionabili }
+    var fotoAperta by remember { mutableStateOf(false) }
+    GeneticaRiga(
+        etichetta = etichetta,
+        valore = genitore?.nome ?: stringResource(R.string.home_genitore_aggiungi),
+        dettaglio = when {
+            genitore == null -> ""
+            genitore.geckoId == null -> stringResource(R.string.home_genitore_esterno)
+            else -> genitore.morph
+        },
+        coloreValore = when {
+            genitore == null -> colors.inkFaint
+            apribile != null -> colors.teal
+            else -> null
+        },
+        modifier = Modifier.clickable { if (apribile != null) onApriGecko(apribile) else if (genitore == null) onModifica() },
+        miniatura = genitore?.let { g ->
+            {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(colors.surface2)
+                        .clickable(enabled = g.fotoPath != null) { fotoAperta = true },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (g.fotoPath != null) {
+                        TerraAsyncImage(
+                            model = java.io.File(g.fotoPath),
+                            contentDescription = g.nome,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize().clip(CircleShape),
+                        )
+                    } else {
+                        Text(g.nome.take(1).uppercase(), color = colors.inkFaint, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
+        },
+    )
+    val fotoPath = genitore?.fotoPath
+    if (fotoAperta && fotoPath != null) {
+        Dialog(onDismissRequest = { fotoAperta = false }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(colors.surface)
+                    .clickable { fotoAperta = false },
+            ) {
+                TerraAsyncImage(
+                    model = java.io.File(fotoPath),
+                    contentDescription = genitore.nome,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(320.dp),
+                )
+                Text(
+                    "$etichetta · ${genitore.nome}",
+                    color = colors.ink,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(14.dp),
+                )
             }
         }
     }

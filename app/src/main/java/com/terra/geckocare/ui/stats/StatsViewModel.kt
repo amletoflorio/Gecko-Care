@@ -3,6 +3,7 @@ package com.terra.geckocare.ui.stats
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.terra.geckocare.data.repository.DefecationRepository
 import com.terra.geckocare.data.repository.ExpenseRepository
 import com.terra.geckocare.data.repository.FeedingRepository
 import com.terra.geckocare.data.repository.GeckoRepository
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -43,6 +45,7 @@ class StatsViewModel(
     private val shedRepository: ShedRepository,
     private val expenseRepository: ExpenseRepository,
     private val geckoRepository: GeckoRepository,
+    private val defecationRepository: DefecationRepository,
 ) : ViewModel() {
 
     private val geckoId = MutableStateFlow<Long?>(null)
@@ -96,7 +99,7 @@ class StatsViewModel(
                 )
             }
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsUiState())
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsUiState())
 
     /** Esporta i dati del solo animale corrente in un CSV in cache, pronto per la condivisione. */
     suspend fun esportaCsvGeckoCorrente(): File? {
@@ -106,7 +109,8 @@ class StatsViewModel(
         val growth = growthRepository.logsForGecko(id).first()
         val sheds = shedRepository.logsForGecko(id).first()
         val expenses = expenseRepository.expensesForGecko(id).first()
-        val csv = buildCsvExport(mapOf(id to gecko.nome), feedings, growth, sheds, expenses)
+        val feci = defecationRepository.logsForGecko(id).first()
+        val csv = buildCsvExport(mapOf(id to gecko.nome), feedings, growth, sheds, expenses, feci)
         return scriviFileCsv(csv, "terra_${gecko.nome}.csv")
     }
 
@@ -117,13 +121,15 @@ class StatsViewModel(
         val feedings = mutableListOf<com.terra.geckocare.data.local.entity.Feeding>()
         val growth = mutableListOf<com.terra.geckocare.data.local.entity.GrowthLog>()
         val sheds = mutableListOf<com.terra.geckocare.data.local.entity.ShedLog>()
+        val feci = mutableListOf<com.terra.geckocare.data.local.entity.DefecationLog>()
         gechi.forEach { g ->
             feedings += feedingRepository.feedingsForGecko(g.id).first()
             growth += growthRepository.logsForGecko(g.id).first()
             sheds += shedRepository.logsForGecko(g.id).first()
+            feci += defecationRepository.logsForGecko(g.id).first()
         }
         val expenses = expenseRepository.expensesAll().first()
-        val csv = buildCsvExport(nomi, feedings, growth, sheds, expenses)
+        val csv = buildCsvExport(nomi, feedings, growth, sheds, expenses, feci)
         return scriviFileCsv(csv, "terra_allevamento.csv")
     }
 

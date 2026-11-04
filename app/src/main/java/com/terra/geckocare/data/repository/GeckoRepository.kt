@@ -18,13 +18,19 @@ class GeckoRepository(
 
     suspend fun getByIdOnce(id: Long): Gecko? = geckoDao.getByIdOnce(id)
 
+    fun figli(id: Long): Flow<List<Gecko>> = geckoDao.figli(id)
+
     fun countAttivi(): Flow<Int> = geckoDao.countAttivi()
 
     suspend fun insert(gecko: Gecko): Long = geckoDao.insert(gecko)
 
     suspend fun update(gecko: Gecko) = geckoDao.update(gecko)
 
-    suspend fun delete(gecko: Gecko) = geckoDao.delete(gecko)
+    suspend fun delete(gecko: Gecko) {
+        geckoDao.scollegaPadre(gecko.id, gecko.nome, gecko.fotoProfiloPath)
+        geckoDao.scollegaMadre(gecko.id, gecko.nome, gecko.fotoProfiloPath)
+        geckoDao.delete(gecko)
+    }
 
     fun tagsForGecko(geckoId: Long): Flow<List<GeckoTag>> = geckoTagDao.tagsForGecko(geckoId)
 

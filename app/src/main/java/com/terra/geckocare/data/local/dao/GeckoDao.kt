@@ -27,6 +27,16 @@ interface GeckoDao {
     @Query("SELECT COUNT(*) FROM gecko WHERE stato = 'ATTIVO'")
     fun countAttivi(): Flow<Int>
 
+    @Query("SELECT * FROM gecko WHERE padreId = :id OR madreId = :id ORDER BY nome COLLATE NOCASE ASC")
+    fun figli(id: Long): Flow<List<Gecko>>
+
+    /** Scollega i figli da un genitore che sta per essere eliminato, conservandone nome e foto come genitore esterno. */
+    @Query("UPDATE gecko SET padreId = NULL, padreEsterno = :nome, padreEsternoFotoPath = :foto WHERE padreId = :id")
+    suspend fun scollegaPadre(id: Long, nome: String, foto: String?)
+
+    @Query("UPDATE gecko SET madreId = NULL, madreEsterno = :nome, madreEsternoFotoPath = :foto WHERE madreId = :id")
+    suspend fun scollegaMadre(id: Long, nome: String, foto: String?)
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(gecko: Gecko): Long
 

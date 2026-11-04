@@ -18,6 +18,10 @@ private fun giornoMeseAbbreviato(context: Context, data: LocalDate): String {
     return DateTimeFormatter.ofPattern("d MMM", locale).format(data).uppercase(locale)
 }
 
+/** "20 OTT – 26 OTT" — intervallo lunedì-domenica della settimana che inizia in [inizio], nella lingua corrente. */
+fun formatIntervalloSettimana(context: Context, inizio: LocalDate): String =
+    "${giornoMeseAbbreviato(context, inizio)} – ${giornoMeseAbbreviato(context, inizio.plusDays(6))}"
+
 /** "OGGI · 19:20", "IERI · 19:20", "21 AGO · 19:15" — per il feed attività (pasto/peso), nella lingua corrente. */
 fun formatAttivitaTimestamp(context: Context, instant: Instant, oggi: LocalDate = LocalDate.now()): String {
     val dataOra: LocalDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime()

@@ -5,38 +5,55 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.terra.geckocare.data.local.entity.Expense
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
-interface ExpenseDao {
+abstract class ExpenseDao {
 
     @Query("SELECT * FROM expense WHERE geckoId = :geckoId ORDER BY data DESC")
-    fun expensesForGecko(geckoId: Long): Flow<List<Expense>>
+    abstract fun expensesForGecko(geckoId: Long): Flow<List<Expense>>
 
     @Query("SELECT * FROM expense WHERE id = :id")
-    suspend fun getById(id: Long): Expense?
+    abstract suspend fun getById(id: Long): Expense?
+
+    @Query("SELECT * FROM expense WHERE gruppo = :gruppo ORDER BY id ASC")
+    abstract suspend fun getByGruppo(gruppo: String): List<Expense>
 
     @Query("SELECT * FROM expense ORDER BY data DESC")
-    fun expensesAll(): Flow<List<Expense>>
+    abstract fun expensesAll(): Flow<List<Expense>>
 
     @Query("SELECT * FROM expense WHERE data BETWEEN :start AND :end ORDER BY data DESC")
-    fun expensesInRange(start: LocalDate, end: LocalDate): Flow<List<Expense>>
+    abstract fun expensesInRange(start: LocalDate, end: LocalDate): Flow<List<Expense>>
 
     @Query("SELECT * FROM expense WHERE geckoId = :geckoId AND data BETWEEN :start AND :end ORDER BY data DESC")
-    fun expensesForGeckoInRange(geckoId: Long, start: LocalDate, end: LocalDate): Flow<List<Expense>>
+    abstract fun expensesForGeckoInRange(geckoId: Long, start: LocalDate, end: LocalDate): Flow<List<Expense>>
 
     @Query("SELECT COALESCE(SUM(importo), 0.0) FROM expense WHERE data BETWEEN :start AND :end")
-    fun totaleAllevamentoInRange(start: LocalDate, end: LocalDate): Flow<Double>
+    abstract fun totaleAllevamentoInRange(start: LocalDate, end: LocalDate): Flow<Double>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(expense: Expense): Long
+    abstract suspend fun insert(expense: Expense): Long
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    protected abstract suspend fun insertAll(expenses: List<Expense>)
 
     @Update
-    suspend fun update(expense: Expense)
+    abstract suspend fun update(expense: Expense)
 
     @Delete
-    suspend fun delete(expense: Expense)
+    abstract suspend fun delete(expense: Expense)
+
+    @Query("DELETE FROM expense WHERE id IN (:ids)")
+    abstract suspend fun deleteByIds(ids: List<Long>)
+
+    /** Sostituisce in blocco le voci di un acquisto: il form le modifica sempre tutte insieme. */
+    @Transaction
+    open suspend fun sostituisciVoci(idPrecedenti: List<Long>, nuove: List<Expense>) {
+        if (idPrecedenti.isNotEmpty()) deleteByIds(idPrecedenti)
+        insertAll(nuove.map { it.copy(id = 0) })
+    }
 }

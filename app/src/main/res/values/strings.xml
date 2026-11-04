@@ -93,6 +93,7 @@
     <!-- Comuni -->
     <string name="common_annulla">Annulla</string>
     <string name="common_conferma">Conferma</string>
+    <string name="common_data_ora">Data e ora</string>
     <string name="common_chiudi">Chiudi</string>
     <string name="common_indietro">Indietro</string>
 
@@ -123,6 +124,7 @@
     <string name="qr_export_piano">Piano pasti: %1$s</string>
     <string name="home_qr_tap_hint">Tocca per ingrandire</string>
     <string name="home_piano_alimentare">Piano alimentare per età</string>
+    <string name="home_piano_prossimo">Prossimo pasto · %1$d di %2$d del ciclo</string>
     <string name="home_piano_nessuna_fascia">Nessuna fascia configurata</string>
     <string name="home_piano_dettaglio_vuoto">Nessuna fascia d\'età configurata per questa età.</string>
     <string name="home_attivita_recente">Attività recente</string>
@@ -189,6 +191,28 @@
     <string name="muta_salva">Salva muta</string>
     <string name="muta_elimina">Elimina muta</string>
 
+    <!-- Form / registro feci -->
+    <string name="feci_title_nuovo">Registra feci</string>
+    <string name="feci_title_modifica">Modifica feci</string>
+    <string name="feci_aspetto">Aspetto</string>
+    <string name="feci_normale_label">Feci normali</string>
+    <string name="feci_normale_hint">Disattiva se molli, con sangue o prede non digerite</string>
+    <string name="feci_note">Note</string>
+    <string name="feci_salva">Salva</string>
+    <string name="feci_salva_modifiche">Salva modifiche</string>
+    <string name="feci_elimina">Elimina registrazione</string>
+    <string name="feci_count">%d volte</string>
+    <string name="feci_ultima">Ultima</string>
+    <string name="feci_registro_vuoto">Nessuna defecazione registrata</string>
+    <string name="feci_normale">normale</string>
+    <string name="feci_anomala">anomala</string>
+    <string name="feci_aggiungi">+ Registra feci</string>
+    <string name="feci_settimana_vuota">Nessuna registrazione in questa settimana</string>
+    <string name="settimana_scorsa">Settimana scorsa</string>
+    <string name="settimane_fa">%d settimane fa</string>
+    <string name="settimana_precedente_desc">Settimana precedente</string>
+    <string name="settimana_successiva_desc">Settimana successiva</string>
+
     <!-- Form crescita -->
     <string name="crescita_title_nuovo">Registra peso/lunghezza</string>
     <string name="crescita_title_modifica">Modifica misura</string>
@@ -224,26 +248,32 @@
     <string name="pasti_eyebrow">Alimentazione · %s</string>
     <string name="pasti_title">Pasti</string>
     <string name="pasti_tab_registro">Registro</string>
+    <string name="pasti_tab_feci">Feci</string>
     <string name="pasti_tab_piano">Piano per età</string>
     <string name="pasti_settimana">Questa settimana</string>
     <string name="pasti_count">%d pasti</string>
-    <string name="pasti_calcio_d3">Calcio+D3 rispettato</string>
+    <string name="pasti_calcio_d3">Integratori come da piano</string>
+    <string name="pasti_prossimo_pasto">Prossimo pasto</string>
+    <string name="pasti_prossimo_numero">Pasto %1$d di %2$d del ciclo</string>
+    <string name="pasti_prossimo_senza_schema">La fascia attuale non ha uno schema integratori: aggiungilo dal tab Piano per sapere cosa dare a ogni pasto.</string>
+    <string name="pasti_prossimo_hint">Il ciclo avanza solo con i pasti accettati e riparte dal pasto 1 a ogni cambio di fascia.</string>
+    <string name="pasto_previsto_piano">Previsto dal piano (pasto %1$d di %2$d): %3$s</string>
     <string name="pasti_cronologia">Cronologia</string>
     <string name="pasti_filtro_tutti">Tutti</string>
     <string name="pasti_filtro_accettati">Accettati</string>
     <string name="pasti_filtro_rifiutati">Rifiutati</string>
     <string name="pasti_filtro_con_d3">Con calcio+D3</string>
     <string name="pasti_registro_vuoto">Nessun pasto registrato con questo filtro.</string>
+    <string name="pasti_settimana_vuota">Nessun pasto in questa settimana.</string>
     <string name="pasti_accettato">accettato</string>
     <string name="pasti_rifiutato">rifiutato</string>
-    <string name="pasti_calcio_d3_chip">● Calcio + D3</string>
-    <string name="pasti_solo_calcio">● Solo calcio</string>
     <string name="pasti_nessun_integratore">○ Nessun integratore</string>
     <string name="pasti_aggiungi">+ Aggiungi pasto</string>
     <string name="pasti_piano_hint">Il piano si applica in automatico in base all\'età dell\'animale, e resta modificabile in qualsiasi momento — utile se il veterinario consiglia una variazione.</string>
     <string name="pasti_fasce_eta">Fasce d\'età</string>
     <string name="pasti_fasce_vuoto">Nessuna fascia configurata.</string>
-    <string name="pasti_range_eta">%1$d–%2$d giorni</string>
+    <string name="pasti_range_eta">%1$d–%2$d mesi</string>
+    <string name="pasti_range_eta_aperto">da %1$d mesi</string>
     <string name="pasti_attuale">ATTUALE</string>
     <string name="pasti_modifica_fascia_desc">Modifica fascia</string>
     <string name="pasti_nuova_fascia">+ Nuova fascia personalizzata</string>
@@ -285,17 +315,28 @@
     <string name="fascia_title_nuova">Nuova fascia</string>
     <string name="fascia_nome">Nome fase</string>
     <string name="fascia_nome_placeholder">Es. Giovanile</string>
-    <string name="fascia_eta">Età (giorni)</string>
+    <string name="fascia_eta">Età (mesi compiuti)</string>
     <string name="fascia_da">Da</string>
     <string name="fascia_a">A</string>
     <string name="fascia_frequenza">Frequenza</string>
     <string name="fascia_frequenza_placeholder">Es. a giorni alterni</string>
-    <string name="fascia_note_integratori">Note integratori</string>
+    <string name="fascia_note_integratori">Note</string>
     <string name="fascia_note_integratori_placeholder">Es. calcio con D3 alla maggior parte dei pasti</string>
     <string name="fascia_ambito">Ambito</string>
     <string name="fascia_solo_animale">Solo per questo animale</string>
     <string name="fascia_salva">Salva fascia</string>
     <string name="fascia_elimina">Elimina fascia</string>
+    <string name="fascia_a_senza_limite">nessun limite</string>
+    <string name="fascia_schema">Schema integratori sugli insetti</string>
+    <string name="fascia_schema_vuoto">Nessuna riga: aggiungi un pasto per costruire il ciclo</string>
+    <string name="fascia_schema_aggiungi">+ Aggiungi pasto</string>
+    <string name="fascia_schema_rimuovi_desc">Rimuovi riga</string>
+    <string name="piano_col_pasto">Pasto n°</string>
+    <string name="piano_col_integratori">Integratori</string>
+    <string name="piano_nessuno">Nessuno</string>
+    <string name="integratore_calcio">Calcio</string>
+    <string name="integratore_d3">D3</string>
+    <string name="integratore_multivit">Multivit.</string>
 
     <!-- Spese -->
     <string name="spese_budget">Budget</string>
@@ -396,4 +437,52 @@
     <string name="notif_promemoria_integratori">Promemoria integratori</string>
     <string name="notif_promemoria_altro">Promemoria Gecko Care</string>
     <string name="notif_tutto_allevamento">tutto l\'allevamento</string>
+
+    <!-- Genetica, insetti nel piano, spese per mese -->
+    <string name="gecko_form_genitori">Genitori</string>
+    <string name="gecko_form_genitori_hint">Scegli padre e madre tra i tuoi gechi, oppure scrivi il nome se provengono da un altro allevamento.</string>
+    <string name="gecko_padre">Padre</string>
+    <string name="gecko_madre">Madre</string>
+    <string name="gecko_genitore_non_impostato">Non impostato</string>
+    <string name="gecko_form_rimuovi_genitore">Rimuovi genitore</string>
+    <string name="gecko_form_scegli_padre">Scegli il padre</string>
+    <string name="gecko_form_scegli_madre">Scegli la madre</string>
+    <string name="gecko_form_nessun_candidato">Nessun geco disponibile nel tuo allevamento.</string>
+    <string name="gecko_form_genitore_esterno">Oppure genitore esterno (non nel tuo allevamento):</string>
+    <string name="gecko_form_genitore_esterno_placeholder">Es. Zeus · Tremper Albino</string>
+    <string name="gecko_form_usa_nome_esterno">Usa nome esterno</string>
+    <string name="home_genetica">Genetica</string>
+    <string name="home_figli">Figli (%d)</string>
+    <string name="home_genitore_aggiungi">+ Aggiungi</string>
+    <string name="home_genitore_esterno">esterno</string>
+    <string name="qr_export_padre">Padre: %1$s</string>
+    <string name="qr_export_madre">Madre: %1$s</string>
+    <string name="fascia_schema_hint">Per ogni pasto del ciclo indica quali insetti dare e con quali integratori spolverarli.</string>
+    <string name="fascia_schema_pasto_n">Pasto %d</string>
+    <string name="fascia_insetti_placeholder">Altri insetti, separati da virgola</string>
+    <string name="piano_col_insetti">Insetti</string>
+    <string name="piano_col_cosa_dare">Cosa dare</string>
+    <string name="pasti_prossimo_insetti_vuoto">Nessun insetto indicato nel piano per questo pasto: aggiungili modificando la fascia.</string>
+    <string name="pasto_insetti_previsti_piano">Insetti previsti dal piano: %1$s</string>
+    <string name="spese_totale_del_mese">Totale · %1$s</string>
+    <string name="spese_totale_allevamento_del_mese">Totale allevamento · %1$s</string>
+    <string name="spese_di_cui_generiche">di cui spese generiche: %1$s</string>
+    <string name="spese_voci">Voci di spesa (%d)</string>
+    <string name="spese_generica">Generica</string>
+    <string name="spese_generiche">Spese generiche</string>
+    <string name="spese_aggiungi_generica">+ Aggiungi spesa generica</string>
+    <string name="spese_mese_precedente">Mese precedente</string>
+    <string name="spese_mese_successivo">Mese successivo</string>
+    <string name="spesa_data_cambia">Cambia</string>
+    <string name="spesa_voci">Voci</string>
+    <string name="spesa_voce_n">Voce %d</string>
+    <string name="spesa_aggiungi_voce">+ Aggiungi voce</string>
+    <string name="spesa_rimuovi_voce_desc">Rimuovi voce</string>
+    <string name="spesa_voce_descrizione_placeholder">Es. Dubia 50 pz</string>
+    <string name="spesa_totale_voci">Totale (%d voci)</string>
+    <string name="gecko_form_genitore_aggiungi_foto">Aggiungi foto</string>
+    <string name="gecko_form_genitore_cambia_foto">Cambia foto</string>
+    <string name="gecko_form_genitore_rimuovi_foto">Rimuovi foto</string>
+    <string name="spese_acquisti">Spese del mese (%d)</string>
+    <string name="spese_acquisto_voci">🧾 Acquisto · %d voci</string>
 </resources>

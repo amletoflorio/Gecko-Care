@@ -4,10 +4,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.terra.geckocare.data.local.dao.CareNoteDao
+import com.terra.geckocare.data.local.dao.DefecationLogDao
 import com.terra.geckocare.data.local.dao.EnvironmentLogDao
 import com.terra.geckocare.data.local.dao.ExpenseDao
 import com.terra.geckocare.data.local.dao.FeedingDao
 import com.terra.geckocare.data.local.dao.FeedingPlanRuleDao
+import com.terra.geckocare.data.local.dao.FeedingPlanStepDao
 import com.terra.geckocare.data.local.dao.GeckoDao
 import com.terra.geckocare.data.local.dao.GeckoPhotoDao
 import com.terra.geckocare.data.local.dao.GeckoTagDao
@@ -15,10 +17,12 @@ import com.terra.geckocare.data.local.dao.GrowthLogDao
 import com.terra.geckocare.data.local.dao.ReminderDao
 import com.terra.geckocare.data.local.dao.ShedLogDao
 import com.terra.geckocare.data.local.entity.CareNote
+import com.terra.geckocare.data.local.entity.DefecationLog
 import com.terra.geckocare.data.local.entity.EnvironmentLog
 import com.terra.geckocare.data.local.entity.Expense
 import com.terra.geckocare.data.local.entity.Feeding
 import com.terra.geckocare.data.local.entity.FeedingPlanRule
+import com.terra.geckocare.data.local.entity.FeedingPlanStep
 import com.terra.geckocare.data.local.entity.Gecko
 import com.terra.geckocare.data.local.entity.GeckoPhoto
 import com.terra.geckocare.data.local.entity.GeckoTag
@@ -39,8 +43,10 @@ import com.terra.geckocare.data.local.entity.ShedLog
         Reminder::class,
         EnvironmentLog::class,
         GeckoPhoto::class,
+        DefecationLog::class,
+        FeedingPlanStep::class,
     ],
-    version = 2,
+    version = 7,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -54,8 +60,10 @@ abstract class TerraDatabase : RoomDatabase() {
     abstract fun careNoteDao(): CareNoteDao
     abstract fun expenseDao(): ExpenseDao
     abstract fun feedingPlanRuleDao(): FeedingPlanRuleDao
+    abstract fun feedingPlanStepDao(): FeedingPlanStepDao
     abstract fun reminderDao(): ReminderDao
     abstract fun environmentLogDao(): EnvironmentLogDao
+    abstract fun defecationLogDao(): DefecationLogDao
 
     companion object {
         const val DATABASE_NAME = "terra.db"

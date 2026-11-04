@@ -21,18 +21,21 @@ import com.terra.geckocare.data.repository.ShedRepository
 import com.terra.geckocare.domain.ActivityItem
 import com.terra.geckocare.domain.ActivityKind
 import com.terra.geckocare.domain.INTERVALLO_MUTA_DEFAULT_GIORNI
-import com.terra.geckocare.domain.etaInGiorni
+import com.terra.geckocare.domain.etaInMesi
 import com.terra.geckocare.domain.etaLabel
 import com.terra.geckocare.domain.formatAttivitaTimestamp
 import com.terra.geckocare.domain.intervalloMedioMuta
+import com.terra.geckocare.domain.prossimiIntegratori
 import com.terra.geckocare.domain.regolaAttuale
 import com.terra.geckocare.worker.ReminderScheduler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -52,6 +55,7 @@ data class HomeUiState(
     val lunghezzaTrendSu: Boolean? = null,
     val pianoNomeFase: String? = null,
     val pianoDettaglio: String = "",
+    val pianoProssimiIntegratori: com.terra.geckocare.domain.IntegratoriPrevisti? = null,
     val shareCode: String = "",
     val qrContent: String = "",
     val attivitaRecente: List<ActivityItem> = emptyList(),
@@ -66,7 +70,15 @@ data class HomeUiState(
     val letture: List<com.terra.geckocare.data.local.entity.EnvironmentLog> = emptyList(),
     val muteStoriche: List<ShedLog> = emptyList(),
     val crescitaStorica: List<GrowthLog> = emptyList(),
+    val padre: GenitoreUi? = null,
+    val madre: GenitoreUi? = null,
+    val figli: List<Gecko> = emptyList(),
 )
+
+/** Genitore mostrato in scheda: [geckoId] valorizzato se è un animale dell'allevamento. */
+data class GenitoreUi(val nome: String, val geckoId: Long? = null, val morph: String = "", val fotoPath: String? = null)
+
+private data class Genealogia(val gechi: List<Gecko>, val figli: List<Gecko>)
 
 private data class NucleoBase(
     val gecko: Gecko?,
@@ -79,6 +91,8 @@ private data class NucleoBase(
 
 private data class NucleoExtra(
     val planRules: List<FeedingPlanRule>,
+    val planSteps: List<com.terra.geckocare.data.local.entity.FeedingPlanStep>,
+    val allFeedings: List<Feeding>,
     val remindersGecko: List<Reminder>,
     val remindersGenerici: List<Reminder>,
     val careNotes: List<CareNote>,
@@ -130,16 +144,16 @@ class HomeViewModel(
 
     private val nucleoExtra = geckoId.flatMapLatest { id ->
         if (id == null) {
-            flowOf(NucleoExtra(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
+            flowOf(NucleoExtra(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
         } else {
             combine(
-                feedingPlanRepository.rulesForGeckoOrDefault(id),
+                combine(feedingPlanRepository.rulesForGeckoOrDefault(id), feedingPlanRepository.allSteps()) { r, s -> r to s },
                 reminderRepository.remindersForGecko(id),
                 reminderRepository.remindersGenerici(),
                 careNoteRepository.notesForGecko(id),
                 feedingRepository.feedingsForGecko(id),
-            ) { rules, remindersGecko, remindersGenerici, notes, feedings ->
-                NucleoExtra(rules, remindersGecko, remindersGenerici, notes, feedings.take(8))
+            ) { (rules, steps), remindersGecko, remindersGenerici, notes, feedings ->
+                NucleoExtra(rules, steps, feedings, remindersGecko, remindersGenerici, notes, feedings.take(8))
             }
         }
     }
@@ -148,11 +162,24 @@ class HomeViewModel(
         if (id == null) flowOf(emptyList()) else environmentRepository.logsForGecko(id)
     }
 
-    val uiState: StateFlow<HomeUiState> = combine(nucleoBase, nucleoExtra, envLogs) { base, extra, logs ->
-        buildUiState(base, extra, logs)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
+    private val genealogia = geckoId.flatMapLatest { id ->
+        if (id == null) {
+            flowOf(Genealogia(emptyList(), emptyList()))
+        } else {
+            combine(geckoRepository.getAll(), geckoRepository.figli(id)) { tutti, figli -> Genealogia(tutti, figli) }
+        }
+    }
 
-    private fun buildUiState(base: NucleoBase, extra: NucleoExtra, envLogs: List<com.terra.geckocare.data.local.entity.EnvironmentLog>): HomeUiState {
+    val uiState: StateFlow<HomeUiState> = combine(nucleoBase, nucleoExtra, envLogs, genealogia) { base, extra, logs, gen ->
+        buildUiState(base, extra, logs, gen)
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
+
+    private fun buildUiState(
+        base: NucleoBase,
+        extra: NucleoExtra,
+        envLogs: List<com.terra.geckocare.data.local.entity.EnvironmentLog>,
+        genealogia: Genealogia,
+    ): HomeUiState {
         val gecko = base.gecko ?: return HomeUiState(caricamento = false)
 
         val zona = ZoneId.systemDefault()
@@ -182,8 +209,9 @@ class HomeViewModel(
             context.getString(com.terra.geckocare.R.string.home_giorni_suffix, giorniAlProssimoPasto)
         }
 
-        val etaGiorni = gecko.etaInGiorni()
-        val regola = regolaAttuale(extra.planRules, etaGiorni)
+        val etaMesi = gecko.etaInMesi()
+        val regola = regolaAttuale(extra.planRules, etaMesi)
+        val prossimi = prossimiIntegratori(extra.allFeedings, gecko, regola, extra.planSteps.filter { it.ruleId == regola?.id })
 
         val attivita = buildList {
             base.latestFeeding?.let {
@@ -212,10 +240,18 @@ class HomeViewModel(
         val pianoDettaglioTxt = regola?.let { "${it.frequenzaTesto} · ${it.noteIntegratori}" } ?: context.getString(com.terra.geckocare.R.string.home_piano_dettaglio_vuoto)
         val shareCode = "GECKO-${gecko.id.toString().padStart(6, '0')}"
 
+        fun genitore(id: Long?, esterno: String, fotoEsterna: String?): GenitoreUi? =
+            id?.let { genealogia.gechi.firstOrNull { g -> g.id == it } }?.let { GenitoreUi(it.nome, it.id, it.morph, it.fotoProfiloPath) }
+                ?: esterno.takeIf { it.isNotBlank() }?.let { GenitoreUi(it, fotoPath = fotoEsterna) }
+        val padre = genitore(gecko.padreId, gecko.padreEsterno, gecko.padreEsternoFotoPath)
+        val madre = genitore(gecko.madreId, gecko.madreEsterno, gecko.madreEsternoFotoPath)
+
         val qrContent = buildList {
             add(shareCode)
             add(context.getString(com.terra.geckocare.R.string.qr_export_header, gecko.nome))
             if (gecko.morph.isNotBlank()) add(context.getString(com.terra.geckocare.R.string.qr_export_morph, gecko.morph))
+            padre?.let { add(context.getString(com.terra.geckocare.R.string.qr_export_padre, listOf(it.nome, it.morph).filter(String::isNotBlank).joinToString(" · "))) }
+            madre?.let { add(context.getString(com.terra.geckocare.R.string.qr_export_madre, listOf(it.nome, it.morph).filter(String::isNotBlank).joinToString(" · "))) }
             add(context.getString(com.terra.geckocare.R.string.qr_export_eta, etaLabelTxt))
             if (pesoAttuale != null) add(context.getString(com.terra.geckocare.R.string.qr_export_peso, pesoLabelTxt))
             add(context.getString(com.terra.geckocare.R.string.qr_export_piano, pianoDettaglioTxt))
@@ -235,6 +271,7 @@ class HomeViewModel(
             lunghezzaTrendSu = lunghezzaTrend,
             pianoNomeFase = regola?.nomeFase,
             pianoDettaglio = pianoDettaglioTxt,
+            pianoProssimiIntegratori = prossimi,
             shareCode = shareCode,
             qrContent = qrContent,
             attivitaRecente = attivita,
@@ -249,6 +286,9 @@ class HomeViewModel(
             letture = envLogs.take(5),
             muteStoriche = base.shedLogsAll.take(5),
             crescitaStorica = base.growthLogs.takeLast(5).reversed(),
+            padre = padre,
+            madre = madre,
+            figli = genealogia.figli,
         )
     }
 }

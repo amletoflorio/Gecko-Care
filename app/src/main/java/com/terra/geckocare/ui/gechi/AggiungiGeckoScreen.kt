@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -84,6 +85,7 @@ fun AggiungiGeckoScreen(
 ) {
     val colors = LocalTerraColors.current
     val state by viewModel.uiState.collectAsState()
+    val gechi by viewModel.gechi.collectAsState()
     val context = LocalContext.current
     val erroreFotoTesto = stringResource(R.string.foto_errore_salvataggio)
 
@@ -104,6 +106,7 @@ fun AggiungiGeckoScreen(
     var mostraPickerNascita by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     var mostraPickerAcquisizione by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     var nuovoTagInput by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    var pickerGenitore by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<Sesso?>(null) }
 
     Scaffold(
         containerColor = colors.night,
@@ -123,6 +126,7 @@ fun AggiungiGeckoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
@@ -230,6 +234,32 @@ fun AggiungiGeckoScreen(
                     data = state.dataAcquisizione,
                     onClick = { mostraPickerAcquisizione = true },
                     onClear = { viewModel.onDataAcquisizioneChange(null) },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            SectionTitle(stringResource(R.string.gecko_form_genitori))
+            Text(
+                stringResource(R.string.gecko_form_genitori_hint),
+                color = colors.inkFaint,
+                fontSize = 11.5.sp,
+                modifier = Modifier.padding(bottom = 8.dp),
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                GenitoreField(
+                    etichetta = stringResource(R.string.gecko_padre),
+                    valore = nomeGenitore(state.padre, gechi),
+                    foto = fotoGenitore(state.padre, gechi),
+                    onClick = { pickerGenitore = Sesso.MASCHIO },
+                    onClear = { viewModel.onPadreChange(GenitoreScelto()) },
+                    modifier = Modifier.weight(1f),
+                )
+                GenitoreField(
+                    etichetta = stringResource(R.string.gecko_madre),
+                    valore = nomeGenitore(state.madre, gechi),
+                    foto = fotoGenitore(state.madre, gechi),
+                    onClick = { pickerGenitore = Sesso.FEMMINA },
+                    onClear = { viewModel.onMadreChange(GenitoreScelto()) },
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -348,6 +378,21 @@ fun AggiungiGeckoScreen(
         }
     }
 
+    pickerGenitore?.let { sesso ->
+        val padre = sesso == Sesso.MASCHIO
+        GenitorePickerDialog(
+            titolo = stringResource(if (padre) R.string.gecko_form_scegli_padre else R.string.gecko_form_scegli_madre),
+            // Esclude se stesso e gli animali di sesso opposto (i sesso sconosciuto restano selezionabili).
+            candidati = gechi.filter { it.id != state.geckoId && it.sesso != (if (padre) Sesso.FEMMINA else Sesso.MASCHIO) },
+            attuale = if (padre) state.padre else state.madre,
+            onDismiss = { pickerGenitore = null },
+            onConfirm = { scelto ->
+                if (padre) viewModel.onPadreChange(scelto) else viewModel.onMadreChange(scelto)
+                pickerGenitore = null
+            },
+        )
+    }
+
     if (mostraPickerNascita) {
         DatePickerModal(
             dataIniziale = state.dataNascita,
@@ -362,6 +407,176 @@ fun AggiungiGeckoScreen(
             onConfirm = { viewModel.onDataAcquisizioneChange(it); mostraPickerAcquisizione = false },
         )
     }
+}
+
+private fun nomeGenitore(g: GenitoreScelto, gechi: List<com.terra.geckocare.data.local.entity.Gecko>): String? =
+    g.geckoId?.let { id -> gechi.firstOrNull { it.id == id }?.nome } ?: g.nomeEsterno.takeIf { it.isNotBlank() }
+
+/** Modello per TerraAsyncImage: foto profilo se il genitore è dell'allevamento, altrimenti la foto esterna. */
+private fun fotoGenitore(g: GenitoreScelto, gechi: List<com.terra.geckocare.data.local.entity.Gecko>): Any? =
+    if (g.geckoId != null) {
+        gechi.firstOrNull { it.id == g.geckoId }?.fotoProfiloPath?.let { java.io.File(it) }
+    } else {
+        g.fotoPendingUri ?: g.fotoSalvataPath?.let { java.io.File(it) }
+    }
+
+@Composable
+private fun MiniaturaGenitore(foto: Any?, nome: String?, size: androidx.compose.ui.unit.Dp = 32.dp) {
+    val colors = LocalTerraColors.current
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(colors.surface),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (foto != null) {
+            TerraAsyncImage(
+                model = foto,
+                contentDescription = nome,
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(CircleShape),
+            )
+        } else {
+            Text(nome?.take(1)?.uppercase() ?: "?", color = colors.inkFaint, fontSize = (size.value * 0.4f).sp, fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+@Composable
+private fun GenitoreField(
+    etichetta: String,
+    valore: String?,
+    foto: Any?,
+    onClick: () -> Unit,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = LocalTerraColors.current
+    Column(
+        modifier = modifier
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+            .background(colors.surface2)
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+    ) {
+        Text(etichetta, color = colors.inkFaint, fontSize = 10.5.sp)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
+            if (valore != null) MiniaturaGenitore(foto, valore, size = 28.dp)
+            Text(
+                valore ?: stringResource(R.string.gecko_genitore_non_impostato),
+                color = if (valore != null) colors.ink else colors.inkFaint,
+                fontSize = 13.sp,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f).padding(top = 2.dp),
+            )
+            if (valore != null) {
+                IconButton(onClick = onClear, modifier = Modifier.size(20.dp)) {
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.gecko_form_rimuovi_genitore), tint = colors.inkFaint, modifier = Modifier.size(14.dp))
+                }
+            }
+        }
+    }
+}
+
+/** Scelta di un genitore: un geco dell'allevamento oppure un nome libero per animali esterni. */
+@Composable
+private fun GenitorePickerDialog(
+    titolo: String,
+    candidati: List<com.terra.geckocare.data.local.entity.Gecko>,
+    attuale: GenitoreScelto,
+    onDismiss: () -> Unit,
+    onConfirm: (GenitoreScelto) -> Unit,
+) {
+    val colors = LocalTerraColors.current
+    val attualeEsterno = attuale.geckoId == null
+    var esterno by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(if (attualeEsterno) attuale.nomeEsterno else "") }
+    var fotoPending by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(if (attualeEsterno) attuale.fotoPendingUri else null) }
+    var fotoSalvata by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(if (attualeEsterno) attuale.fotoSalvataPath else null) }
+    val pickFoto = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        if (uri != null) fotoPending = uri
+    }
+    val fotoEsterna: Any? = fotoPending ?: fotoSalvata?.let { java.io.File(it) }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = colors.surface,
+        title = { Text(titolo, color = colors.ink) },
+        text = {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                if (candidati.isEmpty()) {
+                    Text(stringResource(R.string.gecko_form_nessun_candidato), color = colors.inkFaint, fontSize = 12.5.sp)
+                }
+                candidati.forEach { g ->
+                    val selezionato = g.id == attuale.geckoId
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp))
+                            .background(if (selezionato) colors.tealDim else Color.Transparent)
+                            .clickable { onConfirm(GenitoreScelto(geckoId = g.id)) }
+                            .padding(horizontal = 10.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        MiniaturaGenitore(g.fotoProfiloPath?.let { java.io.File(it) }, g.nome)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(g.nome, color = colors.ink, fontSize = 14.sp)
+                            if (g.morph.isNotBlank()) Text(g.morph, color = colors.inkFaint, fontSize = 11.sp)
+                        }
+                        if (selezionato) Icon(Icons.Outlined.Check, contentDescription = null, tint = colors.teal, modifier = Modifier.size(16.dp))
+                    }
+                }
+                Text(
+                    stringResource(R.string.gecko_form_genitore_esterno),
+                    color = colors.inkDim,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 14.dp, bottom = 6.dp),
+                )
+                OutlinedTextField(
+                    value = esterno,
+                    onValueChange = { esterno = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text(stringResource(R.string.gecko_form_genitore_esterno_placeholder)) },
+                    singleLine = true,
+                    colors = terraTextFieldColors(),
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Box(modifier = Modifier.clickable { pickFoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }) {
+                        if (fotoEsterna != null) {
+                            MiniaturaGenitore(fotoEsterna, esterno, size = 48.dp)
+                        } else {
+                            Box(
+                                modifier = Modifier.size(48.dp).clip(CircleShape).background(colors.surface2),
+                                contentAlignment = Alignment.Center,
+                            ) { Icon(Icons.Outlined.CameraAlt, contentDescription = null, tint = colors.inkFaint) }
+                        }
+                    }
+                    androidx.compose.material3.TextButton(onClick = { pickFoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }) {
+                        Text(stringResource(if (fotoEsterna != null) R.string.gecko_form_genitore_cambia_foto else R.string.gecko_form_genitore_aggiungi_foto), color = colors.teal)
+                    }
+                    if (fotoEsterna != null) {
+                        IconButton(onClick = { fotoPending = null; fotoSalvata = null }, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.gecko_form_genitore_rimuovi_foto), tint = colors.inkFaint, modifier = Modifier.size(16.dp))
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(
+                onClick = { onConfirm(GenitoreScelto(nomeEsterno = esterno.trim(), fotoSalvataPath = fotoSalvata, fotoPendingUri = fotoPending)) },
+                enabled = esterno.isNotBlank(),
+            ) { Text(stringResource(R.string.gecko_form_usa_nome_esterno)) }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_annulla)) }
+        },
+    )
 }
 
 @Composable

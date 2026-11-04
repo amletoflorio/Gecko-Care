@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.Flow
 interface FeedingPlanRuleDao {
 
     /** Regole di default valide per tutti i gechi (geckoId nullo). */
-    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId IS NULL ORDER BY etaMinGiorni ASC")
+    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId IS NULL ORDER BY etaMinMesi ASC")
     fun defaultRules(): Flow<List<FeedingPlanRule>>
 
     /** Solo gli override specifici di un geco. */
-    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId = :geckoId ORDER BY etaMinGiorni ASC")
+    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId = :geckoId ORDER BY etaMinMesi ASC")
     fun rulesForGecko(geckoId: Long): Flow<List<FeedingPlanRule>>
 
     /** Regole applicabili a un geco: default + eventuali override, entrambe le fonti. */
-    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId IS NULL OR geckoId = :geckoId ORDER BY etaMinGiorni ASC")
+    @Query("SELECT * FROM feeding_plan_rule WHERE geckoId IS NULL OR geckoId = :geckoId ORDER BY etaMinMesi ASC")
     fun rulesForGeckoOrDefault(geckoId: Long): Flow<List<FeedingPlanRule>>
 
     @Query("SELECT COUNT(*) FROM feeding_plan_rule WHERE geckoId IS NULL")

@@ -1,5 +1,6 @@
 package com.terra.geckocare.domain
 
+import com.terra.geckocare.data.local.entity.DefecationLog
 import com.terra.geckocare.data.local.entity.Expense
 import com.terra.geckocare.data.local.entity.Feeding
 import com.terra.geckocare.data.local.entity.Gecko
@@ -24,7 +25,7 @@ private fun campo(v: Any?): String {
 private fun riga(vararg campi: Any?): String = campi.joinToString(",") { campo(it) }
 
 /**
- * Costruisce un unico CSV con 4 sezioni (pasti, crescita, mute, spese).
+ * Costruisce un unico CSV con 5 sezioni (pasti, feci, crescita, mute, spese).
  * Se [nomiGechi] è vuoto (o ha una sola voce) si assume export di un solo
  * animale e la colonna "geco" non viene ripetuta inutilmente; per l'export
  * dell'intero allevamento invece la colonna aiuta a distinguere le righe.
@@ -35,6 +36,7 @@ fun buildCsvExport(
     growthLogs: List<GrowthLog>,
     shedLogs: List<ShedLog>,
     expenses: List<Expense>,
+    defecationLogs: List<DefecationLog>,
 ): String {
     val sb = StringBuilder()
 
@@ -54,6 +56,13 @@ fun buildCsvExport(
                 it.note,
             ),
         )
+    }
+
+    sb.appendLine()
+    sb.appendLine("== FECI ==")
+    sb.appendLine(riga("geco", "data_ora", "normale", "note"))
+    defecationLogs.sortedBy { it.dataOra }.forEach {
+        sb.appendLine(riga(nomiGechi[it.geckoId] ?: it.geckoId, it.dataOra.atZone(zona).format(dataOraFormatter), it.normale, it.note))
     }
 
     sb.appendLine()

@@ -93,6 +93,7 @@
     <!-- Common -->
     <string name="common_annulla">Cancel</string>
     <string name="common_conferma">Confirm</string>
+    <string name="common_data_ora">Date and time</string>
     <string name="common_chiudi">Close</string>
     <string name="common_indietro">Back</string>
 
@@ -123,6 +124,7 @@
     <string name="qr_export_piano">Feeding plan: %1$s</string>
     <string name="home_qr_tap_hint">Tap to enlarge</string>
     <string name="home_piano_alimentare">Feeding plan by age</string>
+    <string name="home_piano_prossimo">Next meal · %1$d of %2$d in the cycle</string>
     <string name="home_piano_nessuna_fascia">No age range configured</string>
     <string name="home_piano_dettaglio_vuoto">No age range configured for this age.</string>
     <string name="home_attivita_recente">Recent activity</string>
@@ -189,6 +191,28 @@
     <string name="muta_salva">Save shed</string>
     <string name="muta_elimina">Delete shed</string>
 
+    <!-- Poop form / log -->
+    <string name="feci_title_nuovo">Log poop</string>
+    <string name="feci_title_modifica">Edit poop</string>
+    <string name="feci_aspetto">Appearance</string>
+    <string name="feci_normale_label">Normal stool</string>
+    <string name="feci_normale_hint">Turn off if runny, bloody or with undigested prey</string>
+    <string name="feci_note">Notes</string>
+    <string name="feci_salva">Save</string>
+    <string name="feci_salva_modifiche">Save changes</string>
+    <string name="feci_elimina">Delete entry</string>
+    <string name="feci_count">%d times</string>
+    <string name="feci_ultima">Last</string>
+    <string name="feci_registro_vuoto">No poop logged yet</string>
+    <string name="feci_normale">normal</string>
+    <string name="feci_anomala">abnormal</string>
+    <string name="feci_aggiungi">+ Log poop</string>
+    <string name="feci_settimana_vuota">Nothing logged this week</string>
+    <string name="settimana_scorsa">Last week</string>
+    <string name="settimane_fa">%d weeks ago</string>
+    <string name="settimana_precedente_desc">Previous week</string>
+    <string name="settimana_successiva_desc">Next week</string>
+
     <!-- Growth form -->
     <string name="crescita_title_nuovo">Log weight/length</string>
     <string name="crescita_title_modifica">Edit measurement</string>
@@ -224,26 +248,32 @@
     <string name="pasti_eyebrow">Feeding · %s</string>
     <string name="pasti_title">Feeding</string>
     <string name="pasti_tab_registro">Log</string>
+    <string name="pasti_tab_feci">Poop</string>
     <string name="pasti_tab_piano">Plan by age</string>
     <string name="pasti_settimana">This week</string>
     <string name="pasti_count">%d meals</string>
-    <string name="pasti_calcio_d3">Calcium+D3 on track</string>
+    <string name="pasti_calcio_d3">Supplements per plan</string>
+    <string name="pasti_prossimo_pasto">Next meal</string>
+    <string name="pasti_prossimo_numero">Meal %1$d of %2$d in the cycle</string>
+    <string name="pasti_prossimo_senza_schema">The current age range has no supplement schedule: add one from the Plan tab to know what to give at each meal.</string>
+    <string name="pasti_prossimo_hint">The cycle only advances with accepted meals and restarts from meal 1 when the age range changes.</string>
+    <string name="pasto_previsto_piano">Plan says (meal %1$d of %2$d): %3$s</string>
     <string name="pasti_cronologia">History</string>
     <string name="pasti_filtro_tutti">All</string>
     <string name="pasti_filtro_accettati">Accepted</string>
     <string name="pasti_filtro_rifiutati">Refused</string>
     <string name="pasti_filtro_con_d3">With calcium+D3</string>
     <string name="pasti_registro_vuoto">No meals logged with this filter.</string>
+    <string name="pasti_settimana_vuota">No meals this week.</string>
     <string name="pasti_accettato">accepted</string>
     <string name="pasti_rifiutato">refused</string>
-    <string name="pasti_calcio_d3_chip">● Calcium + D3</string>
-    <string name="pasti_solo_calcio">● Calcium only</string>
     <string name="pasti_nessun_integratore">○ No supplement</string>
     <string name="pasti_aggiungi">+ Add meal</string>
     <string name="pasti_piano_hint">The plan applies automatically based on the animal\'s age, and can be adjusted anytime — handy if the vet recommends a change.</string>
     <string name="pasti_fasce_eta">Age ranges</string>
     <string name="pasti_fasce_vuoto">No age range configured.</string>
-    <string name="pasti_range_eta">%1$d–%2$d days</string>
+    <string name="pasti_range_eta">%1$d–%2$d months</string>
+    <string name="pasti_range_eta_aperto">from %1$d months</string>
     <string name="pasti_attuale">CURRENT</string>
     <string name="pasti_modifica_fascia_desc">Edit range</string>
     <string name="pasti_nuova_fascia">+ New custom range</string>
@@ -285,17 +315,28 @@
     <string name="fascia_title_nuova">New range</string>
     <string name="fascia_nome">Stage name</string>
     <string name="fascia_nome_placeholder">E.g. Juvenile</string>
-    <string name="fascia_eta">Age (days)</string>
+    <string name="fascia_eta">Age (full months)</string>
     <string name="fascia_da">From</string>
     <string name="fascia_a">To</string>
     <string name="fascia_frequenza">Frequency</string>
     <string name="fascia_frequenza_placeholder">E.g. every other day</string>
-    <string name="fascia_note_integratori">Supplement notes</string>
+    <string name="fascia_note_integratori">Notes</string>
     <string name="fascia_note_integratori_placeholder">E.g. calcium with D3 on most meals</string>
     <string name="fascia_ambito">Scope</string>
     <string name="fascia_solo_animale">Only for this animal</string>
     <string name="fascia_salva">Save range</string>
     <string name="fascia_elimina">Delete range</string>
+    <string name="fascia_a_senza_limite">no limit</string>
+    <string name="fascia_schema">Insect dusting schedule</string>
+    <string name="fascia_schema_vuoto">No rows yet: add a feeding to build the cycle</string>
+    <string name="fascia_schema_aggiungi">+ Add feeding</string>
+    <string name="fascia_schema_rimuovi_desc">Remove row</string>
+    <string name="piano_col_pasto">Feeding #</string>
+    <string name="piano_col_integratori">Supplements</string>
+    <string name="piano_nessuno">None</string>
+    <string name="integratore_calcio">Calcium</string>
+    <string name="integratore_d3">D3</string>
+    <string name="integratore_multivit">Multivit.</string>
 
     <!-- Expenses -->
     <string name="spese_budget">Budget</string>
@@ -396,4 +437,52 @@
     <string name="notif_promemoria_integratori">Supplement reminder</string>
     <string name="notif_promemoria_altro">Gecko Care reminder</string>
     <string name="notif_tutto_allevamento">whole collection</string>
+
+    <!-- Genetica, insetti nel piano, spese per mese -->
+    <string name="gecko_form_genitori">Parents</string>
+    <string name="gecko_form_genitori_hint">Pick sire and dam among your geckos, or type a name if they come from another breeder.</string>
+    <string name="gecko_padre">Sire</string>
+    <string name="gecko_madre">Dam</string>
+    <string name="gecko_genitore_non_impostato">Not set</string>
+    <string name="gecko_form_rimuovi_genitore">Remove parent</string>
+    <string name="gecko_form_scegli_padre">Choose the sire</string>
+    <string name="gecko_form_scegli_madre">Choose the dam</string>
+    <string name="gecko_form_nessun_candidato">No geckos available in your collection.</string>
+    <string name="gecko_form_genitore_esterno">Or an external parent (not in your collection):</string>
+    <string name="gecko_form_genitore_esterno_placeholder">E.g. Zeus · Tremper Albino</string>
+    <string name="gecko_form_usa_nome_esterno">Use external name</string>
+    <string name="home_genetica">Genetics</string>
+    <string name="home_figli">Offspring (%d)</string>
+    <string name="home_genitore_aggiungi">+ Add</string>
+    <string name="home_genitore_esterno">external</string>
+    <string name="qr_export_padre">Sire: %1$s</string>
+    <string name="qr_export_madre">Dam: %1$s</string>
+    <string name="fascia_schema_hint">For each meal of the cycle, set which insects to offer and which supplements to dust them with.</string>
+    <string name="fascia_schema_pasto_n">Meal %d</string>
+    <string name="fascia_insetti_placeholder">Other insects, comma separated</string>
+    <string name="piano_col_insetti">Insects</string>
+    <string name="piano_col_cosa_dare">What to feed</string>
+    <string name="pasti_prossimo_insetti_vuoto">No insects set in the plan for this meal: add them by editing the age range.</string>
+    <string name="pasto_insetti_previsti_piano">Insects planned: %1$s</string>
+    <string name="spese_totale_del_mese">Total · %1$s</string>
+    <string name="spese_totale_allevamento_del_mese">Collection total · %1$s</string>
+    <string name="spese_di_cui_generiche">of which general expenses: %1$s</string>
+    <string name="spese_voci">Expense items (%d)</string>
+    <string name="spese_generica">General</string>
+    <string name="spese_generiche">General expenses</string>
+    <string name="spese_aggiungi_generica">+ Add general expense</string>
+    <string name="spese_mese_precedente">Previous month</string>
+    <string name="spese_mese_successivo">Next month</string>
+    <string name="spesa_data_cambia">Change</string>
+    <string name="spesa_voci">Items</string>
+    <string name="spesa_voce_n">Item %d</string>
+    <string name="spesa_aggiungi_voce">+ Add item</string>
+    <string name="spesa_rimuovi_voce_desc">Remove item</string>
+    <string name="spesa_voce_descrizione_placeholder">E.g. Dubia 50 pcs</string>
+    <string name="spesa_totale_voci">Total (%d items)</string>
+    <string name="gecko_form_genitore_aggiungi_foto">Add photo</string>
+    <string name="gecko_form_genitore_cambia_foto">Change photo</string>
+    <string name="gecko_form_genitore_rimuovi_foto">Remove photo</string>
+    <string name="spese_acquisti">This month\'s expenses (%d)</string>
+    <string name="spese_acquisto_voci">🧾 Purchase · %d items</string>
 </resources>

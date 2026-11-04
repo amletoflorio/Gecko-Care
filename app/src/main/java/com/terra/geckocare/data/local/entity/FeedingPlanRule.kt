@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey
  * applicabile a tutti i gechi finché non personalizzata; [geckoId] valorizzato
  * = override specifico per quell'animale (le regole geco-specifiche hanno
  * sempre priorità su quelle globali per la stessa fascia d'età).
+ * Età in mesi compiuti, estremi inclusi; [etaMaxMesi] >= [ETA_MESI_SENZA_LIMITE] = fascia aperta.
  */
 @Entity(
     tableName = "feeding_plan_rule",
@@ -27,9 +28,11 @@ data class FeedingPlanRule(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val geckoId: Long? = null,
-    val etaMinGiorni: Int,
-    val etaMaxGiorni: Int,
+    val etaMinMesi: Int,
+    val etaMaxMesi: Int,
     val nomeFase: String,
     val frequenzaTesto: String,
     val noteIntegratori: String,
 )
+
+const val ETA_MESI_SENZA_LIMITE = 999

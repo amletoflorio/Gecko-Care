@@ -9,11 +9,26 @@ import com.terra.geckocare.data.local.entity.StatoGecko
 import com.terra.geckocare.data.photo.PhotoStorageManager
 import com.terra.geckocare.data.repository.GeckoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+
+/**
+ * Genitore scelto nel form: un geco dell'allevamento ([geckoId]) oppure un nome libero
+ * ([nomeEsterno]) con foto facoltativa, già salvata ([fotoSalvataPath]) o appena scelta ([fotoPendingUri]).
+ */
+data class GenitoreScelto(
+    val geckoId: Long? = null,
+    val nomeEsterno: String = "",
+    val fotoSalvataPath: String? = null,
+    val fotoPendingUri: Uri? = null,
+) {
+    val impostato: Boolean get() = geckoId != null || nomeEsterno.isNotBlank()
+}
 
 val PaletteColoriGecko = listOf("#5B9C93", "#AF8A63", "#89A082", "#7C93AD")
 
@@ -29,6 +44,8 @@ data class GeckoFormUiState(
     val descrizione: String = "",
     val coloreTag: String = PaletteColoriGecko.first(),
     val tagSelezionati: Set<String> = emptySet(),
+    val padre: GenitoreScelto = GenitoreScelto(),
+    val madre: GenitoreScelto = GenitoreScelto(),
     val nomeMancante: Boolean = false,
     val salvataggioInCorso: Boolean = false,
     val salvataggioCompletato: Boolean = false,
@@ -46,6 +63,10 @@ class AggiungiGeckoViewModel(
     )
     val uiState: StateFlow<GeckoFormUiState> = _uiState.asStateFlow()
 
+    /** Gechi selezionabili come genitori (tutti, anche deceduti/ceduti: la genealogia resta valida). */
+    val gechi: StateFlow<List<Gecko>> = geckoRepository.getAll()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     fun caricaPerModifica(geckoId: Long) {
         if (_uiState.value.caricatoPerModifica) return
         viewModelScope.launch {
@@ -62,6 +83,8 @@ class AggiungiGeckoViewModel(
                 descrizione = gecko.descrizione,
                 coloreTag = gecko.coloreTag,
                 tagSelezionati = tags,
+                padre = GenitoreScelto(gecko.padreId, gecko.padreEsterno, gecko.padreEsternoFotoPath),
+                madre = GenitoreScelto(gecko.madreId, gecko.madreEsterno, gecko.madreEsternoFotoPath),
                 caricatoPerModifica = true,
             )
         }
@@ -74,6 +97,8 @@ class AggiungiGeckoViewModel(
     fun onDataAcquisizioneChange(v: LocalDate?) = update { it.copy(dataAcquisizione = v) }
     fun onDescrizioneChange(v: String) = update { it.copy(descrizione = v) }
     fun onColoreChange(v: String) = update { it.copy(coloreTag = v) }
+    fun onPadreChange(v: GenitoreScelto) = update { it.copy(padre = v) }
+    fun onMadreChange(v: GenitoreScelto) = update { it.copy(madre = v) }
     fun onFotoScelta(uri: Uri) = update { it.copy(fotoPendingUri = uri) }
 
     fun toggleTag(tag: String) = update {
@@ -97,6 +122,10 @@ class AggiungiGeckoViewModel(
                 }.onFailure { erroreFoto = true }.getOrNull()
             } ?: stato.fotoSalvataPath
 
+            val esistentePrima = stato.geckoId?.let { geckoRepository.getByIdOnce(it) }
+            val fotoPadre = salvaFotoGenitore(stato.padre, esistentePrima?.padreEsternoFotoPath) { erroreFoto = true }
+            val fotoMadre = salvaFotoGenitore(stato.madre, esistentePrima?.madreEsternoFotoPath) { erroreFoto = true }
+
             val geckoId = if (stato.geckoId != null) {
                 val esistente = geckoRepository.getByIdOnce(stato.geckoId)
                 geckoRepository.update(
@@ -112,6 +141,12 @@ class AggiungiGeckoViewModel(
                         coloreTag = stato.coloreTag,
                         stato = esistente?.stato ?: StatoGecko.ATTIVO,
                         dataCreazione = esistente?.dataCreazione ?: java.time.Instant.now(),
+                        padreId = stato.padre.geckoId,
+                        madreId = stato.madre.geckoId,
+                        padreEsterno = stato.padre.nomeEsterno.trim(),
+                        madreEsterno = stato.madre.nomeEsterno.trim(),
+                        padreEsternoFotoPath = fotoPadre,
+                        madreEsternoFotoPath = fotoMadre,
                     ),
                 )
                 stato.geckoId
@@ -126,6 +161,12 @@ class AggiungiGeckoViewModel(
                         fotoProfiloPath = fotoPath,
                         descrizione = stato.descrizione.trim(),
                         coloreTag = stato.coloreTag,
+                        padreId = stato.padre.geckoId,
+                        madreId = stato.madre.geckoId,
+                        padreEsterno = stato.padre.nomeEsterno.trim(),
+                        madreEsterno = stato.madre.nomeEsterno.trim(),
+                        padreEsternoFotoPath = fotoPadre,
+                        madreEsternoFotoPath = fotoMadre,
                     ),
                 )
             }
@@ -136,6 +177,22 @@ class AggiungiGeckoViewModel(
 
             update { it.copy(salvataggioInCorso = false, salvataggioCompletato = true, erroreFoto = erroreFoto) }
         }
+    }
+
+    /**
+     * Foto da salvare per un genitore esterno: copia nello storage quella appena scelta e
+     * cancella il file precedente se sostituito, rimosso o se il genitore è ora dell'allevamento.
+     */
+    private suspend fun salvaFotoGenitore(g: GenitoreScelto, fotoPrecedente: String?, onErrore: () -> Unit): String? {
+        val nuova = when {
+            g.geckoId != null || g.nomeEsterno.isBlank() -> null
+            g.fotoPendingUri != null -> runCatching { photoStorageManager.savePhoto(g.fotoPendingUri) }
+                .onFailure { onErrore() }
+                .getOrNull() ?: g.fotoSalvataPath
+            else -> g.fotoSalvataPath
+        }
+        if (fotoPrecedente != null && fotoPrecedente != nuova) photoStorageManager.deletePhoto(fotoPrecedente)
+        return nuova
     }
 
     private inline fun update(block: (GeckoFormUiState) -> GeckoFormUiState) {

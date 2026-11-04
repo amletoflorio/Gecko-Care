@@ -12,12 +12,14 @@ import com.terra.geckocare.data.repository.GeckoRepository
 import com.terra.geckocare.data.repository.GrowthRepository
 import com.terra.geckocare.data.repository.ReminderRepository
 import com.terra.geckocare.domain.etaLabel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
@@ -109,7 +111,7 @@ class GechiViewModel(
             tagDisponibili = tagDisponibili,
             tagSelezionato = tagSel,
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GechiUiState())
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GechiUiState())
 
     fun selezionaTag(tag: String?) {
         tagSelezionato.value = tag

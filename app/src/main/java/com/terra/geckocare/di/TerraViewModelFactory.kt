@@ -14,6 +14,7 @@ import com.terra.geckocare.ui.home.ReminderFormViewModel
 import com.terra.geckocare.ui.navigation.GeckoSelectionViewModel
 import com.terra.geckocare.ui.pasti.AggiungiPastoViewModel
 import com.terra.geckocare.ui.pasti.FasciaEtaFormViewModel
+import com.terra.geckocare.ui.pasti.FeciFormViewModel
 import com.terra.geckocare.ui.pasti.PastiViewModel
 import com.terra.geckocare.ui.settings.SettingsViewModel
 import com.terra.geckocare.ui.spese.AggiungiSpesaViewModel
@@ -75,11 +76,19 @@ class TerraViewModelFactory(private val container: AppContainer) : ViewModelProv
                 container.feedingRepository,
                 container.feedingPlanRepository,
                 container.geckoRepository,
+                container.defecationRepository,
             )
 
-            AggiungiPastoViewModel::class.java -> AggiungiPastoViewModel(container.appContext, container.feedingRepository)
+            AggiungiPastoViewModel::class.java -> AggiungiPastoViewModel(
+                container.appContext,
+                container.feedingRepository,
+                container.feedingPlanRepository,
+                container.geckoRepository,
+            )
 
             FasciaEtaFormViewModel::class.java -> FasciaEtaFormViewModel(container.feedingPlanRepository)
+
+            FeciFormViewModel::class.java -> FeciFormViewModel(container.defecationRepository)
 
             StatsViewModel::class.java -> StatsViewModel(
                 container.appContext,
@@ -88,6 +97,7 @@ class TerraViewModelFactory(private val container: AppContainer) : ViewModelProv
                 container.shedRepository,
                 container.expenseRepository,
                 container.geckoRepository,
+                container.defecationRepository,
             )
 
             SpeseViewModel::class.java -> SpeseViewModel(container.expenseRepository, container.geckoRepository)
